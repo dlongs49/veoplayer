@@ -1,0 +1,7 @@
+   <svg version="1.1" id="全屏" xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                         width="100px" height="100px" viewBox="0 0 100 100"
+                         xml:space="preserve">
+<path d="M4.23,71.21v18.18c0,3.35,2.73,6.06,6.1,6.06h18.3 M28.63,4.55H10.32c-3.37,0-6.1,2.72-6.1,6.06v18.17l0,0 M95.78,71.21
+	v18.18c0,3.35-2.73,6.06-6.1,6.06H71.37l0,0 M71.37,4.55h18.31c3.36,0,6.1,2.71,6.1,6.06v18.18l0,0"/>
+</svg>

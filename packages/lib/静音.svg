@@ -1,0 +1,10 @@
+ <svg version="1.1" id="静音" xmlns="http://www.w3.org/2000/svg" style="display: none"
+                         xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                         width="100px" height="100px" viewBox="0 0 100 100" xml:space="preserve">
+<g stroke-width="9" fill="none" stroke-linejoin="round" stroke-linecap="round"
+   fill-rule="evenodd" stroke="#000000">
+	<path d="M24.97,29.84H10.32C6.28,29.84,3,33.11,3,37.16v24.02c0,4.04,3.28,7.32,7.32,7.32h14.65L45.2,88.73
+		c0.96,0.96,2.51,0.96,3.47,0c0.46-0.46,0.72-1.08,0.72-1.73V11.34c0-1.35-1.1-2.45-2.45-2.45c-0.65,0-1.27,0.26-1.73,0.72
+		L24.97,29.84z M67.7,34.52L97,63.82 M97,34.52l-29.3,29.3"/>
+</g>
+</svg>

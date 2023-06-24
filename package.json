@@ -1,0 +1,32 @@
+{
+  "name": "veoplayer",
+  "version": "1.0.1",
+  "description": "A native JavaScript concise video player",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node ./test/index.js",
+    "dev": "node ./scripts/rollup.watch.cjs",
+    "out:css": "node ./packages/watch.js",
+    "watch:css": "sass --watch ./packages/style:./packages/style",
+    "build:css": "sass --style compressed ./packages/style:./packages/style",
+    "build": "rollup -c"
+  },
+  "keywords": [
+    "vidoe",
+    "player"
+  ],
+  "author": "dinglong",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.2",
+    "@rollup/plugin-strip": "^3.0.2",
+    "autoprefixer": "^10.4.14",
+    "cssnano": "^6.0.1",
+    "rollup": "^3.24.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "fs-extra": "^11.1.1",
+    "hls.js": "^1.4.6"
+  }
+}
