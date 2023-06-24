@@ -187,7 +187,7 @@ $veo-process-size: 4px;
 
             .veo-process-sub {
                 opacity: 0;
-                transition: .25s;
+                transition: opacity .25s;
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
@@ -196,12 +196,11 @@ $veo-process-size: 4px;
                 height: $veo-process-size + 8;
                 border-radius: 50%;
                 border: 1px solid rgba(255, 255, 255, .319);
-                pointer-events: none;
                 z-index: 1;
 
                 &::before {
                     opacity: 0;
-                    transition: .25s;
+                    transition: opacity .25s;
                     content: " ";
                     position: absolute;
                     transform: scale(0.5);

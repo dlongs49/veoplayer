@@ -282,7 +282,46 @@ export class VeoPlayer extends CreateVeoNode {
     #veoProcessOffset() {
         const { veo, veoIng, veoCon, veoSub, veoTimeIng, veoContainer } = this.#initNode()
 
+
+        let barX = 0
+        let barLeft = 0
+        let veoConWidth = veoContainer.offsetWidth
+        let duration = veo.duration
+        const elemMove = (e) => {
+            const cx = e.clientX
+            let x = (cx - barX + barLeft)
+            let offset = x / veoConWidth
+            if (offset > -1 && offset <= 1) {
+                let currentTime = (duration * x) / veoConWidth
+                const ingWidth = x / veoConWidth
+                veoIng.style.width = (ingWidth * 100) + '%'
+                veoSub.style.left = ((ingWidth * 100) - 0.5) + '%'
+                let time = formatTime(currentTime)
+                veoTimeIng.innerHTML = time
+                veo.currentTime = currentTime
+                this.#veoPlayPauseNode("play")
+            }
+        }
+
+        let flag = false
+        veoSub.addEventListener("mousedown", (e) => {
+            flag = true
+            barX = e.clientX
+            barLeft = e.target.offsetLeft
+            window.addEventListener("mousemove", elemMove)
+        })
+        window.addEventListener('mouseup', (e) => {
+            window.removeEventListener("mousemove", elemMove)
+        })
+        veoSub.addEventListener("mouseup", (e) => {
+            flag = true
+        })
+
+
+
         veoCon.addEventListener("click", (e) => {
+            if (flag) return
+            console.log(123);
             let veoConWidth = veoContainer.offsetWidth
             let duration = veo.duration
             let x = e.offsetX
@@ -563,9 +602,6 @@ export class VeoPlayer extends CreateVeoNode {
             window.addEventListener("mousemove", elemMove)
         })
         window.addEventListener('mouseup', (e) => {
-            window.removeEventListener("mousemove", elemMove)
-        })
-        veoVolumeProgressBar.addEventListener("mouseup", (e) => {
             window.removeEventListener("mousemove", elemMove)
         })
 
