@@ -1,7 +1,5 @@
-<div style="display:flex;justify-content:center;">
 <img src="https://gitee.com/dlongs49/veoplayer/raw/master/static/veoplayer-logo.png" style="width:80px;height:80px;"/>
-<span style="font-size:50px;font-weight:bold;margin-left:10px;">VeoPlayer</span>
-</div>
+<h1 align="center">VeoPlayer</h1>
 
 #### 示例图
 
