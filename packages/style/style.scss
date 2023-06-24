@@ -536,6 +536,7 @@ $veo-process-size: 4px;
 
                     .veo-volume-outcon {
                         opacity: 0;
+                        visibility: hidden;
                         position: absolute;
                         z-index: 2;
                         bottom: 20px;

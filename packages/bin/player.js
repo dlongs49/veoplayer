@@ -125,7 +125,7 @@ export class VeoPlayer extends CreateVeoNode {
         this.#veoVolume()
         this.#mouseInout(veoSpeed, veoSpeedCon)
         this.#mouseInout(veoSetting, veoSettingOutcon)
-        this.#mouseInout(veoVolume, veoVolumeOutcon,"opacity")
+        this.#mouseInout(veoVolume, veoVolumeOutcon, "opacity")
     }
     /**
      * 视频预加载
@@ -527,7 +527,9 @@ export class VeoPlayer extends CreateVeoNode {
      * 音量设置
      */
     #veoHandleVolume() {
-        const { veoVolumeProgress, veoVolumeProgressBar } = this.#initNode()
+        const { veoVolumeProgress, veoVolume, veoVolumeProgressBar } = this.#initNode()
+        const volumeList = veoVolume.getElementsByTagName("svg")
+
         veoVolumeProgress.addEventListener("click", (e) => {
             let y = e.offsetY
             this.#voeInitVolume(null, y)
@@ -540,8 +542,17 @@ export class VeoPlayer extends CreateVeoNode {
             const y = e.clientY
             let offset = (proHeight - (y - barY + barBottom))
             let by = (100 * offset) / proHeight
-            if (by > -1 && by < 101) {
+            if (by > -1 && by <= 100) {
                 this.#voeInitVolume(null, proHeight - offset)
+                this.#veoIsMuted(false)
+                volumeList[1].style.display = "none"
+                volumeList[0].style.display = "block"
+            }
+
+            if (by <= 0) {
+                this.#veoIsMuted(true)
+                volumeList[0].style.display = "none"
+                volumeList[1].style.display = "block"
             }
         }
 
