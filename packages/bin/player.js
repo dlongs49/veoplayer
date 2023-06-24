@@ -321,7 +321,6 @@ export class VeoPlayer extends CreateVeoNode {
 
         veoCon.addEventListener("click", (e) => {
             if (flag) return
-            console.log(123);
             let veoConWidth = veoContainer.offsetWidth
             let duration = veo.duration
             let x = e.offsetX
