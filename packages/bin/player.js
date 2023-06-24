@@ -133,7 +133,7 @@ export class VeoPlayer extends CreateVeoNode {
      * 视频预加载
      */
     #veoLoaded() {
-        let { veo, veoTimeTotal,veoSlash, veoLoading } = this.#initNode()
+        let { veo, veoCon, veoSpeed, veoDownload, veoSetting, veoTimeTotal, veoControl, veoSlash, veoLoading } = this.#initNode()
         veo.addEventListener('loadstart', (e) => {
             veoLoading.style.display = 'block'
             this.#voeInitVolume('init')
@@ -144,21 +144,28 @@ export class VeoPlayer extends CreateVeoNode {
             let duration = e.target.duration
             this.durationTime = duration
             // Infinity 超出无穷大 或为 视频实时
-            if(duration != Infinity){
+            if (duration != Infinity) {
                 let time = formatTime(duration)
                 svgNode[0].style.display = veoLoading.style.display = 'none';
                 spanNode.innerHTML = time
-            }else{
-                veoSlash.innerHTML = veoTimeTotal.innerHTML = ""
-            }
-            this.#veoProgressBuffer()
-            this.#veoProcessOffset()
-            this.#veoCurrentUpdate()
-            if (this.autoplay) {
-                this.#veoPlayPauseNode("play")
+                this.#veoProgressBuffer()
+                this.#veoProcessOffset()
+                if (this.autoplay) {
+                    this.#veoPlayPauseNode("play")
+                } else {
+                    this.#veoPlayPauseNode("pause")
+                }
             } else {
-                this.#veoPlayPauseNode("pause")
+                this.#veoPlayPauseNode("play")
+                const domList = [veoSlash, veoTimeTotal, veoCon, veoSpeed, veoDownload, veoSetting,]
+                veoControl.style.background = "#00000021"
+                for (let i = 0; i < domList.length; i++) {
+                    domList[i].innerHTML = ""
+                }
             }
+            this.#veoCurrentUpdate()
+
+
         })
 
     }
@@ -352,8 +359,11 @@ export class VeoPlayer extends CreateVeoNode {
             let veoConWidth = veoCon.offsetWidth
             let duration = veo.duration
             const ingWidth = ((veoConWidth * currentTime) / duration) / veoConWidth
-            veoIng.style.width = (ingWidth * 100) + '%'
-            veoSub.style.left = ((ingWidth * 100) - 0.5) + '%'
+
+            if (veoIng) {
+                veoIng.style.width = (ingWidth * 100) + '%'
+                veoSub.style.left = ((ingWidth * 100) - 0.5) + '%'
+            }
             let time = formatTime(currentTime)
             veoTimeIng.innerHTML = time
         })
