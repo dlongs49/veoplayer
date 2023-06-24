@@ -125,7 +125,7 @@ export class VeoPlayer extends CreateVeoNode {
         this.#veoVolume()
         this.#mouseInout(veoSpeed, veoSpeedCon)
         this.#mouseInout(veoSetting, veoSettingOutcon)
-        this.#mouseInout(veoVolume, veoVolumeOutcon)
+        this.#mouseInout(veoVolume, veoVolumeOutcon,"opacity")
     }
     /**
      * 视频预加载
@@ -434,12 +434,22 @@ export class VeoPlayer extends CreateVeoNode {
     /**
      * 移入移出
      */
-    #mouseInout(el, node) {
+    #mouseInout(el, node, type = "display") {
         el.addEventListener("mouseenter", () => {
-            node.style.display = "block"
+            if (type === "display") {
+                node.style.display = "block"
+            } else {
+                node.style.opacity = 1
+                node.style.visibility = "visible"
+            }
         })
         el.addEventListener("mouseleave", () => {
-            node.style.display = "none"
+            if (type === "display") {
+                node.style.display = "none"
+            } else {
+                node.style.opacity = 0
+                node.style.visibility = "hidden"
+            }
         })
     }
     /**
@@ -494,7 +504,9 @@ export class VeoPlayer extends CreateVeoNode {
      * 初始化音量
      */
     #voeInitVolume(type = 'init', eY) {
+
         const { veo, veoVolumeProgressPertxt, veoVolumeProgress, veoVolumeProgressIng, veoVolumeProgressBar } = this.#initNode()
+
         const volumeHeight = veoVolumeProgress.offsetHeight
         let height = 0
         let volumeNum = 0
@@ -520,22 +532,30 @@ export class VeoPlayer extends CreateVeoNode {
             let y = e.offsetY
             this.#voeInitVolume(null, y)
         })
+
+        let barY = 0
+        let barBottom = 0
+        const proHeight = veoVolumeProgress.offsetHeight
+        const elemMove = (e) => {
+            const y = e.clientY
+            let offset = (proHeight - (y - barY + barBottom))
+            let by = (100 * offset) / proHeight
+            if (by > -1 && by < 101) {
+                this.#voeInitVolume(null, proHeight - offset)
+            }
+        }
+
+
         veoVolumeProgressBar.addEventListener("mousedown", (e) => {
-            let height = veoVolumeProgress.offsetHeight
-            let barY = e.clientY
-            let offsetTop = veoVolumeProgress.offsetHeight - e.target.offsetTop
-            let ey = barY - offsetTop
-            document.addEventListener("mousemove", (event) => {
-                let cy = event.clientY
-                let interval = height - (Math.abs((cy - ey) - height))
-                if (interval > 0 && interval < height) {
-                    this.#voeInitVolume(null, interval)
-                }
-            })
+            barY = e.clientY
+            barBottom = e.target.offsetTop
+            window.addEventListener("mousemove", elemMove)
+        })
+        window.addEventListener('mouseup', (e) => {
+            window.removeEventListener("mousemove", elemMove)
         })
         veoVolumeProgressBar.addEventListener("mouseup", (e) => {
-            document.removeEventListener("mousemove")
-            document.onmousemove = null;
+            window.removeEventListener("mousemove", elemMove)
         })
 
     }
