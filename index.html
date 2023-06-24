@@ -13,21 +13,22 @@
         margin: 0;
         width: 100%;
         height: 100%;
-        overflow: hidden;
     }
 
     #test,
     #test1 {
         margin-left: 18px;
     }
+    
 </style>
 
 <body>
     <div id="test"></div>
     <div id="test1" style="margin-top: 20px;"></div>
+    <video id="videoMedia"></video>
 </body>
 <script type="module">
-    import {VeoPlayer} from './test/veoplayer.esm.js'
+    import { VeoPlayer } from './test/veoplayer.esm.js'
     new VeoPlayer({
         id: "test",
         url: "https://s.xlzys.com/play/RdGQ2yaD/index.m3u8",
@@ -56,5 +57,18 @@
     })
 </script>
 
+<script>
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+        .then(data => {
+            let video = document.querySelector(".veo-video video")
+            video.srcObject = data
+            video.onloadedmetadata = () => {
+                video.play();
+            };
+        })
+        .catch(e => {
+            console.log("error:", e);
+        });
+</script>
 
 </html>

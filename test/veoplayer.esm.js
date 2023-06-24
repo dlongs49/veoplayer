@@ -389,7 +389,7 @@ const formatTime = (params) => {
     const hour = Math.floor(params / 3600);
     const minutes = Math.floor(params / 60 % 60);
     const seconds = Math.floor(params % 60);
-
+    // console.log(params,hour,minutes,seconds);
     const hourStr = hour > 0 ? hour + ":" : '';
     const minutesStr = minutes > 9 ? minutes : '0' + minutes;
     const secondsStr = seconds > 9 ? seconds : '0' + seconds;
@@ -919,6 +919,7 @@ class VeoPlayer extends CreateVeoNode {
         let veoVideo = veoContainer.querySelector(".veo-video");
         let veoLoading = veoContainer.querySelector(".veo-loading");
         let veoTimeIng = veoContainer.querySelector(".veo-time-ing");
+        let veoSlash = veoContainer.querySelector(".veo-slash");
         let veoPlayPause = veoContainer.querySelector(".veo-play-pause");
         let veoScreen = veoContainer.querySelector(".veo-screen");
         let veoCapture = veoContainer.querySelector(".veo-capture");
@@ -946,6 +947,7 @@ class VeoPlayer extends CreateVeoNode {
             veoPosterImg,
             veoCon,
             veoIng,
+            veoSlash,
             veoOut,
             veoSub,
             veoVideo,
@@ -1006,7 +1008,7 @@ class VeoPlayer extends CreateVeoNode {
      * 视频预加载
      */
     #veoLoaded() {
-        let { veo, veoTimeTotal, veoLoading } = this.#initNode();
+        let { veo, veoTimeTotal,veoSlash, veoLoading } = this.#initNode();
         veo.addEventListener('loadstart', (e) => {
             veoLoading.style.display = 'block';
             this.#voeInitVolume('init');
@@ -1015,10 +1017,15 @@ class VeoPlayer extends CreateVeoNode {
             let spanNode = veoTimeTotal.querySelector("span");
             let svgNode = veoTimeTotal.querySelectorAll("svg");
             let duration = e.target.duration;
-            let time = formatTime(duration);
             this.durationTime = duration;
-            svgNode[0].style.display = veoLoading.style.display = 'none';
-            spanNode.innerHTML = time;
+            // Infinity 超出无穷大 或为 视频实时
+            if(duration != Infinity){
+                let time = formatTime(duration);
+                svgNode[0].style.display = veoLoading.style.display = 'none';
+                spanNode.innerHTML = time;
+            }else {
+                veoSlash.innerHTML = veoTimeTotal.innerHTML = "";
+            }
             this.#veoProgressBuffer();
             this.#veoProcessOffset();
             this.#veoCurrentUpdate();
