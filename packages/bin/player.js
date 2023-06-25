@@ -694,10 +694,11 @@ export class VeoPlayer extends CreateVeoNode {
                 //     veoContainer.classList.remove("veo-control-isshow")
                 // }, 2000);
                 veoScreen.dataset.index = 0
-
+                veoScreen.setAttribute("label", "退出")
             } else {
                 document.exitFullscreen()
                 veoScreen.dataset.index = 1
+                veoScreen.setAttribute("label", "全屏")
             }
         }
         veoScreen.addEventListener("click", (e) => {

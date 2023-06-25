@@ -8,7 +8,7 @@ v18.18c0,3.35-2.73,6.06-6.1,6.06H71.37l0,0 M71.37,4.55h18.31c3.36,0,6.1,2.71,6.1
 </svg>
 `
 export const exit_full_screen = `   
-<svg version="1.1" id="退出全屏" xmlns="http://www.w3.org/2000/svg" style="display: none"
+<svg version="1.1" id="退出全屏" label="退出全屏" xmlns="http://www.w3.org/2000/svg" style="display: none"
                          xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                          width="100px" height="100px" viewBox="0 0 100 100" xml:space="preserve">
 <g>
