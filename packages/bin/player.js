@@ -1,18 +1,19 @@
-import { CreateVeoNode } from "./createVeoNode.js";
-import { formatTime } from "../utils/format.js";
+import {CreateVeoNode} from "./createVeoNode.js";
+import {formatTime} from "../utils/format.js";
 import './appendcss.js'
+
 export class VeoPlayer extends CreateVeoNode {
     durationTime = 1
     PERCENTILE = 100 // 百分比
     SLIDE_OFFSET = 0.8 // 提示滑块偏移量
     VOLUME_LEN = 100 // 音量总长
     constructor(arg) {
-        let { id, poster, volume, style, url, width, height, speed, autoplay, setting } = arg
+        let {id, poster, volume, style, url, width, height, speed, autoplay, setting} = arg
         if (!document.getElementById(id)) {
             throw new Error(id + " 元素不存在")
         }
 
-        super({ id, style, url, width, height, speed, autoplay, setting })
+        super({id, style, url, width, height, speed, autoplay, setting})
         this.id = id;
         this.poster = poster || null
         this.url = url
@@ -24,6 +25,7 @@ export class VeoPlayer extends CreateVeoNode {
         this.#initNode()
         this.#initPlayer()
     }
+
     #initNode() {
 
         let veoContainer = document.getElementById(this.id);
@@ -105,8 +107,9 @@ export class VeoPlayer extends CreateVeoNode {
             veoMutualPause
         }
     }
+
     #initPlayer() {
-        let { veo, veoSpeed, veoSpeedCon, veoSetting, veoSettingOutcon, veoVolume, veoVolumeOutcon } = this.#initNode()
+        let {veo, veoSpeed, veoSpeedCon, veoSetting, veoSettingOutcon, veoVolume, veoVolumeOutcon} = this.#initNode()
         veo.volume = this.volume / 100
         this.#veoLoaded();
         this.#veoPoster();
@@ -117,7 +120,7 @@ export class VeoPlayer extends CreateVeoNode {
         this.#veoMouseTime();
         this.#veoPlayPause();
         this.#veoConPlay();
-        this.#veoPlayEnded();
+        this.veoPlayEnded();
         this.#veoScreen()
         this.#veoKeyCode();
         this.#veoSpeedNode()
@@ -129,11 +132,22 @@ export class VeoPlayer extends CreateVeoNode {
         this.#mouseInout(veoSetting, veoSettingOutcon)
         this.#mouseInout(veoVolume, veoVolumeOutcon, "opacity")
     }
+
     /**
      * 视频预加载
      */
     #veoLoaded() {
-        let { veo, veoCon, veoSpeed, veoDownload, veoSetting, veoTimeTotal, veoControl, veoSlash, veoLoading } = this.#initNode()
+        let {
+            veo,
+            veoCon,
+            veoSpeed,
+            veoDownload,
+            veoSetting,
+            veoTimeTotal,
+            veoControl,
+            veoSlash,
+            veoLoading
+        } = this.#initNode()
         veo.addEventListener('loadstart', (e) => {
             veoLoading.style.display = 'block'
             this.#voeInitVolume('init')
@@ -163,17 +177,17 @@ export class VeoPlayer extends CreateVeoNode {
                     domList[i].innerHTML = ""
                 }
             }
-            this.#veoCurrentUpdate()
+            this.veoTimeUpdate()
 
 
         })
-
     }
+
     /**
      * 容器的滑入滑出
      */
     #containerMouse() {
-        let { veoControl, veoScreen, veoContainer, veoVideo } = this.#initNode()
+        let {veoControl, veoScreen, veoContainer, veoVideo} = this.#initNode()
         veoContainer.addEventListener("mouseenter", (e) => {
             veoContainer.classList.add("veo-control-isshow")
         })
@@ -198,53 +212,68 @@ export class VeoPlayer extends CreateVeoNode {
         // })
 
     }
+
     /**
      * 视频封面背景
      */
     #veoPoster() {
-        const { veoPoster, veoPosterImg } = this.#initNode()
+        const {veoPoster, veoPosterImg} = this.#initNode()
         if (this.poster) {
             veoPosterImg.src = "https://p9-pc-sign.douyinpic.com/tos-cn-p-0015/6b8ab94dfbde4b68a5a3daa3073508ff_1643286024~tplv-dy-360p.jpeg?biz_tag=pcweb_cover&from=3213915784&s=PackSourceEnum_FAVORITE&sc=origin_cover&se=false&x-expires=1688702400&x-signature=Dh7RoLuGO8Mwl%2FvOCHcNaLtMnFI%3D"
         } else {
             veoPoster.innerHTML = ""
         }
     }
+
     /**
      * 视频加载错误
      */
     #veoError() {
-        let { veoError, veo, veoErrorMsg, veoTimeSvgs, veoLoading } = this.#initNode()
+        let {veoError, veo, veoErrorMsg, veoTimeSvgs, veoLoading} = this.#initNode()
         veo.addEventListener("error", (e) => {
             veoTimeSvgs[0].style.display = veoLoading.style.display = 'none';
             veoTimeSvgs[1].style.display = 'block'
             veoError.style.display = 'flex'
-            let { message } = e.target.error
+            let {message} = e.target.error
             veoErrorMsg.innerHTML = message
         })
+        let veosource = veo.querySelector("source")
+        if (veosource) {
+            veosource.addEventListener("error", (e) => {
+                veoTimeSvgs[0].style.display = veoLoading.style.display = 'none';
+                veoTimeSvgs[1].style.display = 'block'
+                veoError.style.display = 'flex'
+                veoErrorMsg.innerHTML = "视频加载失败"
+            })
+        }
+
     }
+
     /**
      * 视频加载等待中
      */
     #veoWaiting() {
-        let { veoLoading, veo } = this.#initNode()
+        let {veoLoading, veo} = this.#initNode()
         veo.addEventListener('waiting', function (e) {
             veoLoading.style.display = 'block'
         })
     }
+
     /**
      * 视频播放中
      */
     #veoPlaying() {
-        let { veo, veoLoading } = this.#initNode()
+        let {veo, veoLoading} = this.#initNode()
         veo.addEventListener('playing', function (e) {
             veoLoading.style.display = 'none'
         })
     }
+
     /**
      * 进度条缓冲条
      */
     #veoProgressBuffer() {
-        let { veoContainer, veo, veoBuff } = this.#initNode()
+        let {veoContainer, veo, veoBuff} = this.#initNode()
         veo.addEventListener("progress", (e) => {
             let hc = e.target.buffered.end(0)
             let w = veoContainer.offsetWidth
@@ -252,11 +281,12 @@ export class VeoPlayer extends CreateVeoNode {
             veoBuff.style.width = ((buffWidth / w) * 100) + "%"
         })
     }
+
     /**
      * 进度条时长提示
      */
     #veoMouseTime() {
-        const { veoOut, veo, veoCon, veoTimeSlide } = this.#initNode()
+        const {veoOut, veo, veoCon, veoTimeSlide} = this.#initNode()
         // 滑块移入
         veoOut.addEventListener("mousemove", (e) => {
             let x = e.offsetX
@@ -290,11 +320,12 @@ export class VeoPlayer extends CreateVeoNode {
             veoTimeSlide.style.left = ''
         })
     }
+
     /**
      * 更改进度条位置
      */
     #veoProcessOffset() {
-        const { veo, veoIng, veoCon, veoSub, veoTimeIng, veoContainer } = this.#initNode()
+        const {veo, veoIng, veoCon, veoSub, veoTimeIng, veoContainer} = this.#initNode()
 
 
         let barX = 0
@@ -332,7 +363,6 @@ export class VeoPlayer extends CreateVeoNode {
         })
 
 
-
         veoCon.addEventListener("click", (e) => {
             if (flag) return
             let veoConWidth = veoContainer.offsetWidth
@@ -348,13 +378,14 @@ export class VeoPlayer extends CreateVeoNode {
             this.#veoPlayPauseNode("play")
         })
     }
+
     /**
      * 播放时长更改
      */
-    #veoCurrentUpdate() {
-        const { veo, veoCon, veoIng, veoSub, veoTimeIng } = this.#initNode()
+    veoTimeUpdate(callback) {
+        const {veo, veoCon, veoIng, veoSub, veoTimeIng} = this.#initNode()
 
-        veo.addEventListener("timeupdate", () => {
+        veo.addEventListener("timeupdate", (e) => {
             let currentTime = veo.currentTime
             let veoConWidth = veoCon.offsetWidth
             let duration = veo.duration
@@ -365,14 +396,20 @@ export class VeoPlayer extends CreateVeoNode {
                 veoSub.style.left = ((ingWidth * 100) - 0.5) + '%'
             }
             let time = formatTime(currentTime)
+            e.veoFormatTime = time
+            // 外部调用
+            if (callback) {
+                callback(e)
+            }
             veoTimeIng.innerHTML = time
         })
     }
+
     /**
      * 播放 暂停 Node操作
      */
     #veoPlayPauseNode(type) {
-        const { veo, veoPlayPause, veoVideo } = this.#initNode()
+        const {veo, veoPlayPause, veoVideo} = this.#initNode()
         const nodeList = veoPlayPause.getElementsByTagName("svg")
         if (type === 'play') {
             veo.play()
@@ -390,23 +427,25 @@ export class VeoPlayer extends CreateVeoNode {
             nodeList[1].style.setProperty("display", "none")
         }
     }
+
     /**
      * 播放 暂停操作
      */
     #veoPlayPause() {
-        const { veoPlayPause } = this.#initNode()
+        const {veoPlayPause} = this.#initNode()
         veoPlayPause.addEventListener("click", (e) => {
-            let { type } = e.target.dataset
+            let {type} = e.target.dataset
             this.#veoPlayPauseNode(type)
         })
     }
+
     /**
      * 容器播放
      */
     #veoConPlay() {
-        const { veoVideo, veoMutualPlay, veoMutualPause } = this.#initNode()
+        const {veoVideo, veoMutualPlay, veoMutualPause} = this.#initNode()
         veoVideo.addEventListener("click", (e) => {
-            let { type } = e.target.dataset
+            let {type} = e.target.dataset
             if (type === "play") {
                 veoMutualPause.style.display = "block"
                 setTimeout(() => {
@@ -422,20 +461,26 @@ export class VeoPlayer extends CreateVeoNode {
             this.#veoPlayPauseNode(type)
         })
     }
+
     /**
      * 播放结束
      */
-    #veoPlayEnded() {
-        const { veo } = this.#initNode()
+    veoPlayEnded(callback) {
+        const {veo,veoContainer} = this.#initNode()
         veo.addEventListener("ended", (e) => {
+            if(callback){
+                callback(e)
+            }
+            veoContainer.classList.add("veo-control-isshow")
             this.#veoPlayPauseNode('pause')
         })
     }
+
     /**
      * 播放速度
      */
     #veoSpeedNode() {
-        const { veo, veoSpeedItemNode } = this.#initNode()
+        const {veo, veoSpeedItemNode} = this.#initNode()
         for (let i = 0; i < veoSpeedItemNode.length; i++) {
             veoSpeedItemNode[i].addEventListener("click", (e) => {
                 for (let idx in veoSpeedItemNode) {
@@ -449,20 +494,22 @@ export class VeoPlayer extends CreateVeoNode {
             })
         }
     }
+
     /**
      * 视频下载
      */
     #voeDownLoad() {
-        const { veoDownload, veo } = this.#initNode()
+        const {veoDownload, veo} = this.#initNode()
         veoDownload.addEventListener("click", (e) => {
 
         })
     }
+
     /**
      * 设置开关
      */
     #handleVeoSetting() {
-        const { veoSwitch, veo } = this.#initNode()
+        const {veoSwitch, veo} = this.#initNode()
         for (let i = 0; i < veoSwitch.length; i++) {
             veoSwitch[i].addEventListener("click", (e) => {
                 if (veoSwitch[i].classList.length === 1) {
@@ -470,7 +517,7 @@ export class VeoPlayer extends CreateVeoNode {
                 } else {
                     veoSwitch[i].classList.remove("veo-switch-active")
                 }
-                let { name, state } = e.target.dataset
+                let {name, state} = e.target.dataset
                 if (!name) {
                     throw new Error("切换name必传")
                 }
@@ -486,6 +533,7 @@ export class VeoPlayer extends CreateVeoNode {
             })
         }
     }
+
     /**
      * 移入移出
      */
@@ -507,11 +555,12 @@ export class VeoPlayer extends CreateVeoNode {
             }
         })
     }
+
     /**
      * 截图
      */
     #veoCapture() {
-        const { veo, veoCapture } = this.#initNode()
+        const {veo, veoCapture} = this.#initNode()
         const canvas = document.createElement('canvas');
         veoCapture.addEventListener("click", (e) => {
             canvas.width = this.width
@@ -526,16 +575,17 @@ export class VeoPlayer extends CreateVeoNode {
             a.dispatchEvent(mouse)
         })
     }
+
     /**
      * 音量
      */
     #veoVolume() {
-        const { veoVolume } = this.#initNode()
+        const {veoVolume} = this.#initNode()
         const volumeList = veoVolume.getElementsByTagName("svg")
         this.#veoHandleVolume()
         for (let i = 0; i < volumeList.length; i++) {
             volumeList[i].addEventListener("click", (e) => {
-                const { val } = e.target.dataset
+                const {val} = e.target.dataset
                 if (val === "volume") {
                     volumeList[0].style.display = "none"
                     volumeList[1].style.display = "block"
@@ -548,19 +598,27 @@ export class VeoPlayer extends CreateVeoNode {
             })
         }
     }
+
     /**
      * 设置静音
      */
     #veoIsMuted(isMuted) {
-        const { veo } = this.#initNode()
+        const {veo} = this.#initNode()
         veo.muted = isMuted
     }
+
     /**
      * 初始化音量
      */
     #voeInitVolume(type = 'init', eY) {
 
-        const { veo, veoVolumeProgressPertxt, veoVolumeProgress, veoVolumeProgressIng, veoVolumeProgressBar } = this.#initNode()
+        const {
+            veo,
+            veoVolumeProgressPertxt,
+            veoVolumeProgress,
+            veoVolumeProgressIng,
+            veoVolumeProgressBar
+        } = this.#initNode()
 
         const volumeHeight = veoVolumeProgress.offsetHeight
         let height = 0
@@ -578,11 +636,12 @@ export class VeoPlayer extends CreateVeoNode {
         veoVolumeProgressBar.style.bottom = (height - 8) + '%';
         veoVolumeProgressPertxt.innerHTML = (Math.floor(height)) + '%';
     }
+
     /**
      * 音量设置
      */
     #veoHandleVolume() {
-        const { veoVolumeProgress, veoVolume, veoVolumeProgressBar } = this.#initNode()
+        const {veoVolumeProgress, veoVolume, veoVolumeProgressBar} = this.#initNode()
         const volumeList = veoVolume.getElementsByTagName("svg")
 
         veoVolumeProgress.addEventListener("click", (e) => {
@@ -622,11 +681,12 @@ export class VeoPlayer extends CreateVeoNode {
         })
 
     }
+
     /**
      * 全屏
      */
     #veoScreen() {
-        const { veoContainer, veoScreen } = this.#initNode()
+        const {veoContainer, veoScreen} = this.#initNode()
         const screenFunc = (e) => {
             let isFullScreen = document.fullscreenElement
             if (!isFullScreen) {
@@ -654,10 +714,10 @@ export class VeoPlayer extends CreateVeoNode {
      * 键盘控制
      */
     #veoKeyCode() {
-        const { veoPlayPause } = this.#initNode()
+        const {veoPlayPause} = this.#initNode()
 
         document.addEventListener("keyup", (e) => {
-            let { key } = e
+            let {key} = e
             if (key === " ") {
                 let type = veoPlayPause.dataset.type
                 this.#veoPlayPauseNode(type)

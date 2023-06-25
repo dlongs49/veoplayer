@@ -19,16 +19,18 @@
     #test1 {
         margin-left: 18px;
     }
-    
+
 </style>
 
 <body>
-    <div id="test"></div>
-    <div id="test1" style="margin-top: 20px;"></div>
-    <video id="videoMedia"></video>
+<div id="test"></div>
+<div id="test1" style="margin-top: 20px;"></div>
+
+<video id="videoMedia"></video>
 </body>
 <script type="module">
-    import { VeoPlayer } from './test/veoplayer.esm.js'
+    import {VeoPlayer} from './test/veoplayer.esm.js'
+
     new VeoPlayer({
         id: "test",
         url: "https://s.xlzys.com/play/RdGQ2yaD/index.m3u8",
@@ -43,9 +45,10 @@
         speed: [2, 1.5, 1, 0.75, 0.5],
         setting: ["loop", "pip"]
     })
-    new VeoPlayer({
+
+    let player = new VeoPlayer({
         id: "test1",
-        url: "http://127.0.0.1/一个人的武林【国语】.mp4",
+        url: "https://wave.video/embed/64980862dd369c48a0a69290/649808744a11ca62ed24aec6.mp4",
         width: 665,
         height: 440,
         style: {
@@ -55,10 +58,17 @@
         speed: [2, 1.5, 1, 0.75, 0.5],
         setting: ["loop", "pip"]
     })
+    //时长改变
+    player.veoTimeUpdate((e) => {
+
+    })
+   //播放结束
+    player.veoPlayEnded((e) => {
+    })
 </script>
 
 <script>
-    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    navigator.mediaDevices.getUserMedia({audio: true, video: true})
         .then(data => {
             let video = document.querySelector(".veo-video video")
             video.srcObject = data

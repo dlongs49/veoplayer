@@ -686,7 +686,7 @@ $veo-process-size: 4px;
             border-radius: 30px;
             animation: scaleFadeout .52s linear 1 normal forwards;
             pointer-events: none;
-
+            z-index: 2;
             svg {
                 fill: rgba(255, 255, 255, 0.685);
             }

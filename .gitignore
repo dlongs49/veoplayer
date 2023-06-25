@@ -1,4 +1,5 @@
 /node_modules
+*.fleet
 *.vscode
 *.idea
 *.zip
