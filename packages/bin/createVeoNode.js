@@ -297,7 +297,6 @@ export class CreateVeoNode extends paramsRules {
         veoSpeed.appendChild(veoSpeedSpan)
         const veoSpeedOutcon = document.createElement("div")
         veoSpeedOutcon.setAttribute("class", "veo-speed-outcon")
-        veoSpeedOutcon.style.display = 'none'
         veoSpeed.appendChild(veoSpeedOutcon)
         const veoSpeedIncon = document.createElement("div")
         veoSpeedIncon.setAttribute("class", "veo-speed-incon")

@@ -250,6 +250,18 @@
   width: 20px;
   height: 20px;
 }
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed-outcon, .veo-container .veo-control .veo-player-con .veo-right-control .veo-setting-outcon,
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume-outcon {
+  opacity: 0;
+  position: absolute;
+  z-index: 2;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-bottom: 20px;
+  transition: all 0.24s ease-out;
+  visibility: hidden;
+}
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-speed {
   position: relative;
   cursor: pointer;
@@ -263,21 +275,12 @@
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-speed span:hover {
   color: #fff;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-outcon {
-  display: none;
-  position: absolute;
-  z-index: 2;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding-bottom: 20px;
-}
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-outcon .veo-speed-incon {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-incon {
   padding: 10px 14px;
   background: rgba(17, 17, 17, 0.7);
   border-radius: 8px;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-outcon .veo-speed-incon .veo-speed-item {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-incon .veo-speed-item {
   display: flex;
   align-items: center;
   margin: 5px 0;
@@ -285,26 +288,26 @@
   padding: 6px 30px 7px 6px;
   transition: all 0.3s;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-outcon .veo-speed-incon .veo-speed-item:hover {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-incon .veo-speed-item:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-outcon .veo-speed-incon .veo-speed-item svg {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-incon .veo-speed-item svg {
   width: 14px;
   height: 14px;
   opacity: 0;
   pointer-events: none;
   fill: #ffffff;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-outcon .veo-speed-incon .veo-speed-item span {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-incon .veo-speed-item span {
   margin-left: 10px;
   color: #fff;
   font-size: 13px;
   pointer-events: none;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-outcon .veo-speed-incon .veo-speed-active {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-incon .veo-speed-active {
   background-color: rgba(255, 255, 255, 0.15);
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-outcon .veo-speed-incon .veo-speed-active svg {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-speed .veo-speed-incon .veo-speed-active svg {
   opacity: 1;
 }
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-download {
@@ -374,16 +377,7 @@
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-setting svg path {
   fill: #fff;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-outcon {
-  display: none;
-  position: absolute;
-  z-index: 2;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding-bottom: 20px;
-}
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-outcon .veo-setting-incon {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-incon {
   width: 120px;
   padding: 16px 10px;
   background: rgba(17, 17, 17, 0.7);
@@ -392,21 +386,21 @@
   flex-direction: column;
   align-items: center;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-outcon .veo-setting-incon .veo-setting-item {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-incon .veo-setting-item {
   display: flex;
   align-items: center;
   margin-bottom: 14px;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-outcon .veo-setting-incon .veo-setting-item:last-child {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-incon .veo-setting-item:last-child {
   margin-bottom: 0;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-outcon .veo-setting-incon .veo-setting-item span {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-incon .veo-setting-item span {
   max-width: 60px;
   min-width: 60px;
   color: #fff;
   font-size: 12px;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-outcon .veo-setting-incon .veo-setting-item .veo-switch {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-incon .veo-setting-item .veo-switch {
   display: flex;
   align-items: center;
   margin-left: 16px;
@@ -418,7 +412,7 @@
   padding: 2px 2px;
   transition: border-color 0.3s, background-color 0.3s;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-outcon .veo-setting-incon .veo-setting-item .veo-switch .veo-switch-bar {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-incon .veo-setting-item .veo-switch .veo-switch-bar {
   width: 14px;
   height: 14px;
   background: #fff;
@@ -426,10 +420,10 @@
   transition: transform 0.3s;
   pointer-events: none;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-outcon .veo-setting-incon .veo-setting-item .veo-switch-active {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-incon .veo-setting-item .veo-switch-active {
   border: 1px solid var(--veo-color-primary);
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-outcon .veo-setting-incon .veo-setting-item .veo-switch-active .veo-switch-bar {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-setting .veo-setting-incon .veo-setting-item .veo-switch-active .veo-switch-bar {
   transform: translateX(20px);
   background: var(--veo-color-primary);
 }
@@ -496,17 +490,7 @@
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-volume:hover svg g {
   stroke: var(--veo-color-primary);
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-outcon {
-  opacity: 0;
-  visibility: hidden;
-  position: absolute;
-  z-index: 2;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding-bottom: 20px;
-}
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-outcon .veo-volume-incon {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-incon {
   padding: 10px 10px;
   background: rgba(17, 17, 17, 0.7);
   border-radius: 8px;
@@ -514,19 +498,19 @@
   flex-direction: column;
   align-items: center;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-outcon .veo-volume-incon .veo-volume-pertxt {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-incon .veo-volume-pertxt {
   width: 40px;
   text-align: center;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.8);
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-outcon .veo-volume-incon .veo-volume-progress-con {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-incon .veo-volume-progress-con {
   position: relative;
   height: 95px;
   width: 100%;
   margin-top: 6px;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-outcon .veo-volume-incon .veo-volume-progress-con .veo-volume-progress {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-incon .veo-volume-progress-con .veo-volume-progress {
   position: relative;
   width: 100%;
   height: 90px;
@@ -534,7 +518,7 @@
   display: flex;
   justify-content: center;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-outcon .veo-volume-incon .veo-volume-progress-con .veo-volume-progress .veo-volume-progress-line {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-incon .veo-volume-progress-con .veo-volume-progress .veo-volume-progress-line {
   position: absolute;
   width: 3px;
   height: 90px;
@@ -542,7 +526,7 @@
   border-radius: 3px;
   pointer-events: none;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-outcon .veo-volume-incon .veo-volume-progress-con .veo-volume-progress .veo-volume-progress-ing {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-incon .veo-volume-progress-con .veo-volume-progress .veo-volume-progress-ing {
   position: absolute;
   width: 3.6px;
   height: 50%;
@@ -554,7 +538,7 @@
   z-index: 1;
   pointer-events: none;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-outcon .veo-volume-incon .veo-volume-progress-con .veo-volume-progress-bar {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-incon .veo-volume-progress-con .veo-volume-progress-bar {
   position: absolute;
   bottom: 45%;
   left: 50%;
@@ -566,7 +550,7 @@
   cursor: pointer;
   z-index: 2;
 }
-.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-outcon .veo-volume-incon .veo-volume-progress-con .veo-volume-progress-bar::after {
+.veo-container .veo-control .veo-player-con .veo-right-control .veo-volume .veo-volume-incon .veo-volume-progress-con .veo-volume-progress-bar::after {
   position: absolute;
   display: block;
   content: "";

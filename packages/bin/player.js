@@ -1,6 +1,6 @@
 import {CreateVeoNode} from "./createVeoNode.js";
 import {formatTime} from "../utils/format.js";
-import './appendcss.js'
+// import './appendcss.js'
 
 export class VeoPlayer extends CreateVeoNode {
     durationTime = 1
@@ -128,8 +128,8 @@ export class VeoPlayer extends CreateVeoNode {
         this.#handleVeoSetting()
         this.#veoCapture();
         this.#veoVolume()
-        this.#mouseInout(veoSpeed, veoSpeedCon)
-        this.#mouseInout(veoSetting, veoSettingOutcon)
+        this.#mouseInout(veoSpeed, veoSpeedCon, "opacity")
+        this.#mouseInout(veoSetting, veoSettingOutcon, "opacity")
         this.#mouseInout(veoVolume, veoVolumeOutcon, "opacity")
     }
 
@@ -550,8 +550,7 @@ export class VeoPlayer extends CreateVeoNode {
             if (type === "display") {
                 node.style.display = "none"
             } else {
-                node.style.opacity = 0
-                node.style.visibility = "hidden"
+                node.setAttribute("style", "")
             }
         })
     }

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>veoplayer</title>
+    <link rel="stylesheet" href="./packages/style/style.css">
 </head>
 <style>
     html,
@@ -21,7 +22,6 @@
     }
 
 </style>
-
 <body>
 <div id="test"></div>
 <div id="test1" style="margin-top: 20px;"></div>
@@ -68,17 +68,17 @@
 </script>
 
 <script>
-    navigator.mediaDevices.getUserMedia({audio: true, video: true})
-        .then(data => {
-            let video = document.querySelector(".veo-video video")
-            video.srcObject = data
-            video.onloadedmetadata = () => {
-                video.play();
-            };
-        })
-        .catch(e => {
-            console.log("error:", e);
-        });
+    // navigator.mediaDevices.getUserMedia({audio: true, video: true})
+    //     .then(data => {
+    //         let video = document.querySelector(".veo-video video")
+            // video.srcObject = data
+            // video.onloadedmetadata = () => {
+            //     video.play();
+            // };
+        // })
+        // .catch(e => {
+        //     console.log("error:", e);
+        // });
 </script>
 
 </html>

@@ -326,7 +326,18 @@ $veo-process-size: 4px;
                     width: 20px;
                     height: 20px;
                 }
-
+                .veo-speed-outcon,.veo-setting-outcon,
+                .veo-volume-outcon{
+                    opacity: 0;
+                        position: absolute;
+                        z-index: 2;
+                        bottom: 20px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        padding-bottom: 20px;
+                        transition:  all .24s ease-out;
+                        visibility: hidden
+                }
 
                 .veo-speed {
                     @include veoRight;
@@ -340,59 +351,47 @@ $veo-process-size: 4px;
                             color: #fff;
                         }
                     }
+                    .veo-speed-incon {
+                        padding: 10px 14px;
+                        background: rgba(17, 17, 17, .7);
+                        border-radius: 8px;
 
-                    .veo-speed-outcon {
-                        display: none;
-                        position: absolute;
-                        z-index: 2;
-                        bottom: 20px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        padding-bottom: 20px;
+                        .veo-speed-item {
+                            display: flex;
+                            align-items: center;
+                            margin: 5px 0;
+                            border-radius: 40px;
+                            padding: 6px 30px 7px 6px;
+                            transition: all .3s;
 
-                        .veo-speed-incon {
-                            padding: 10px 14px;
-                            background: rgba(17, 17, 17, .7);
-                            border-radius: 8px;
-
-                            .veo-speed-item {
-                                display: flex;
-                                align-items: center;
-                                margin: 5px 0;
-                                border-radius: 40px;
-                                padding: 6px 30px 7px 6px;
-                                transition: all .3s;
-
-                                &:hover {
-                                    background-color: rgba(255, 255, 255, .1);
-                                }
-
-                                svg {
-                                    width: 14px;
-                                    height: 14px;
-                                    opacity: 0;
-                                    pointer-events: none;
-                                    fill: #ffffff;
-                                }
-
-                                span {
-                                    margin-left: 10px;
-                                    color: #fff;
-                                    font-size: 13px;
-                                    pointer-events: none;
-                                }
+                            &:hover {
+                                background-color: rgba(255, 255, 255, .1);
                             }
 
-                            .veo-speed-active {
-                                background-color: rgba(255, 255, 255, .15);
+                            svg {
+                                width: 14px;
+                                height: 14px;
+                                opacity: 0;
+                                pointer-events: none;
+                                fill: #ffffff;
+                            }
 
-                                svg {
-                                    opacity: 1;
-                                }
+                            span {
+                                margin-left: 10px;
+                                color: #fff;
+                                font-size: 13px;
+                                pointer-events: none;
+                            }
+                        }
+
+                        .veo-speed-active {
+                            background-color: rgba(255, 255, 255, .15);
+
+                            svg {
+                                opacity: 1;
                             }
                         }
                     }
-
 
                 }
 
@@ -427,69 +426,59 @@ $veo-process-size: 4px;
                         }
                     }
 
-                    .veo-setting-outcon {
-                        display: none;
-                        position: absolute;
-                        z-index: 2;
-                        bottom: 20px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        padding-bottom: 20px;
+                    .veo-setting-incon {
+                        width: 120px;
+                        padding: 16px 10px;
+                        background: rgba(17, 17, 17, .7);
+                        border-radius: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
 
-                        .veo-setting-incon {
-                            width: 120px;
-                            padding: 16px 10px;
-                            background: rgba(17, 17, 17, .7);
-                            border-radius: 8px;
+                        .veo-setting-item {
                             display: flex;
-                            flex-direction: column;
                             align-items: center;
+                            margin-bottom: 14px;
 
-                            .veo-setting-item {
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
+
+                            span {
+                                max-width: 60px;
+                                min-width: 60px;
+                                color: #fff;
+                                font-size: 12px;
+                            }
+
+                            .veo-switch {
                                 display: flex;
                                 align-items: center;
-                                margin-bottom: 14px;
+                                margin-left: 16px;
+                                width: 36px;
+                                height: 16px;
+                                border-radius: 18px;
+                                border: 1px solid #fff;
+                                cursor: pointer;
+                                padding: 2px 2px;
+                                transition: border-color .3s, background-color .3s;
 
-                                &:last-child {
-                                    margin-bottom: 0;
+                                .veo-switch-bar {
+                                    width: 14px;
+                                    height: 14px;
+                                    background: #fff;
+                                    border-radius: 50%;
+                                    transition: transform .3s;
+                                    pointer-events: none;
                                 }
+                            }
 
-                                span {
-                                    max-width: 60px;
-                                    min-width: 60px;
-                                    color: #fff;
-                                    font-size: 12px;
-                                }
+                            .veo-switch-active {
+                                border: 1px solid var(--veo-color-primary);
 
-                                .veo-switch {
-                                    display: flex;
-                                    align-items: center;
-                                    margin-left: 16px;
-                                    width: 36px;
-                                    height: 16px;
-                                    border-radius: 18px;
-                                    border: 1px solid #fff;
-                                    cursor: pointer;
-                                    padding: 2px 2px;
-                                    transition: border-color .3s, background-color .3s;
-
-                                    .veo-switch-bar {
-                                        width: 14px;
-                                        height: 14px;
-                                        background: #fff;
-                                        border-radius: 50%;
-                                        transition: transform .3s;
-                                        pointer-events: none;
-                                    }
-                                }
-
-                                .veo-switch-active {
-                                    border: 1px solid var(--veo-color-primary);
-
-                                    .veo-switch-bar {
-                                        transform: translateX(20px);
-                                        background: var(--veo-color-primary);
-                                    }
+                                .veo-switch-bar {
+                                    transform: translateX(20px);
+                                    background: var(--veo-color-primary);
                                 }
                             }
                         }
@@ -533,93 +522,82 @@ $veo-process-size: 4px;
                         }
                     }
 
-                    .veo-volume-outcon {
-                        opacity: 0;
-                        visibility: hidden;
-                        position: absolute;
-                        z-index: 2;
-                        bottom: 20px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        padding-bottom: 20px;
+                    .veo-volume-incon {
+                        padding: 10px 10px;
+                        background: rgba(17, 17, 17, .7);
+                        border-radius: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
 
-                        .veo-volume-incon {
-                            padding: 10px 10px;
-                            background: rgba(17, 17, 17, .7);
-                            border-radius: 8px;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
+                        .veo-volume-pertxt {
+                            width: 40px;
+                            text-align: center;
+                            font-size: 12px;
+                            color: rgba(255, 255, 255, .8);
+                        }
 
-                            .veo-volume-pertxt {
-                                width: 40px;
-                                text-align: center;
-                                font-size: 12px;
-                                color: rgba(255, 255, 255, .8);
-                            }
+                        .veo-volume-progress-con {
+                            position: relative;
+                            height: 95px;
+                            width: 100%;
+                            margin-top: 6px;
 
-                            .veo-volume-progress-con {
+                            .veo-volume-progress {
                                 position: relative;
-                                height: 95px;
                                 width: 100%;
-                                margin-top: 6px;
-
-                                .veo-volume-progress {
-                                    position: relative;
-                                    width: 100%;
+                                height: 90px;
+                                overflow: hidden;
+                                display: flex;
+                                justify-content: center;
+                                .veo-volume-progress-line {
+                                    position: absolute;
+                                    width: 3px;
                                     height: 90px;
-                                    overflow: hidden;
-                                    display: flex;
-                                    justify-content: center;
-                                    .veo-volume-progress-line {
-                                        position: absolute;
-                                        width: 3px;
-                                        height: 90px;
-                                        background: rgba(255, 255, 255, .6);
-                                        border-radius: 3px;
-                                        pointer-events: none;
-                                    }
-
-                                    .veo-volume-progress-ing {
-                                        position: absolute;
-                                        width: 3.6px;
-                                        height: 50%;
-                                        left: 50%;
-                                        transform: translateX(-50%);
-                                        bottom: 0;
-                                        border-radius: 3px;
-                                        background: var(--veo-color-primary);
-                                        z-index: 1;
-                                        pointer-events: none;
-                                    }
-
+                                    background: rgba(255, 255, 255, .6);
+                                    border-radius: 3px;
+                                    pointer-events: none;
                                 }
 
-                                .veo-volume-progress-bar {
+                                .veo-volume-progress-ing {
                                     position: absolute;
-                                    bottom: 45%;
+                                    width: 3.6px;
+                                    height: 50%;
                                     left: 50%;
                                     transform: translateX(-50%);
-                                    width: 12px;
-                                    height: 12px;
-                                    background-color: #fff;
-                                    border-radius: 100%;
-                                    cursor: pointer;
-                                    z-index: 2;
+                                    bottom: 0;
+                                    border-radius: 3px;
+                                    background: var(--veo-color-primary);
+                                    z-index: 1;
+                                    pointer-events: none;
+                                }
 
-                                    &::after {
-                                        position: absolute;
-                                        display: block;
-                                        content: "";
-                                        width: 10px;
-                                        height: 10px;
-                                        top: 50%;
-                                        left: 50%;
-                                        transform: translate(-50%, -50%);
-                                        border: 4px solid var(--veo-color-primary);
-                                        opacity: .25;
-                                        border-radius: 50%;
-                                    }
+                            }
+
+                            .veo-volume-progress-bar {
+                                position: absolute;
+                                bottom: 45%;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                width: 12px;
+                                height: 12px;
+                                background-color: #fff;
+                                border-radius: 100%;
+                                cursor: pointer;
+                                z-index: 2;
+
+                                &::after {
+                                    position: absolute;
+                                    display: block;
+                                    content: "";
+                                    width: 10px;
+                                    height: 10px;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%);
+                                    border: 4px solid var(--veo-color-primary);
+                                    opacity: .25;
+                                    border-radius: 50%;
                                 }
                             }
                         }
