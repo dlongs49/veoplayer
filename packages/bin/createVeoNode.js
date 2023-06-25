@@ -23,7 +23,7 @@ export class CreateVeoNode extends paramsRules {
     #EXIT_FULL_SCREEN_LABEL = "退出全屏"
     #VOLUME_LABEL = "音量"
     #VOLUME_MUTE_LABEL = "静音"
-
+    #VIDEO_FORMAT_LIST = [".m3u8", ".mp4", ".webm"]
     constructor(arg) {
         let { id, style, url, width, height, speed, autoplay, setting: settings } = arg
         super(arg)
@@ -60,8 +60,8 @@ export class CreateVeoNode extends paramsRules {
             }
         })
         parentNode.setAttribute("class", "veo-container veo-control-isshow")
-        parentNode.style.setProperty("width", this.width+ "px")
-        parentNode.style.setProperty("height", this.height+ "px")
+        parentNode.style.setProperty("width", this.width + "px")
+        parentNode.style.setProperty("height", this.height + "px")
         const veoVideo = document.createElement("div")
         veoVideo.setAttribute("class", "veo-video")
         veoVideo.setAttribute("data-type", "play")
@@ -74,14 +74,21 @@ export class CreateVeoNode extends paramsRules {
     #createVideoNode(veoVideo) {
         const video = document.createElement("video")
         const suffix = formatVideo(this.url)
-        if (suffix === '.m3u8') {
+        if (suffix.includes(".m3u8")) {
 
             let hls = new Hls();
             hls.loadSource(this.url)
             hls.attachMedia(video)
 
         } else {
+            const suf = this.#VIDEO_FORMAT_LIST.find(v => suffix.includes(v))
             const source = document.createElement("source")
+            if (suf) {
+                source.setAttribute("type", "video/" + suf.slice(1))
+                
+            } else {
+                source.setAttribute("type", "video/mp4")
+            }
             video.autoplay = this.autoplay
             video.appendChild(source)
             source.src = this.url
@@ -194,11 +201,11 @@ export class CreateVeoNode extends paramsRules {
             const veoProcess = document.createElement("div")
             veoProcess.setAttribute("class", VEO_PROCESS_LIST[i])
             VEO_PROCESS_CON_NODE.appendChild(veoProcess)
-            let pro = this.styleArr.find(v=>v.key === "processColor")
-            if(pro) {
-                if(i === 1 || i===3){
+            let pro = this.styleArr.find(v => v.key === "processColor")
+            if (pro) {
+                if (i === 1 || i === 3) {
                     veoProcess.style.setProperty("background", pro.value)
-                    veoProcess.setAttribute("data-color",pro.value)
+                    veoProcess.setAttribute("data-color", pro.value)
                 }
             }
         }

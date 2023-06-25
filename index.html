@@ -20,18 +20,18 @@
     #test1 {
         margin-left: 18px;
     }
-
 </style>
-<body>
-<div id="test"></div>
-<div id="test1" style="margin-top: 20px;"></div>
 
-<video id="videoMedia"></video>
+<body>
+    <div id="test"></div>
+    <div id="test1" style="margin-top: 20px;"></div>
+
+    <video id="videoMedia"></video>
 </body>
 <script type="module">
-    import {VeoPlayer} from './test/veoplayer.esm.js'
+    import { VeoPlayer } from './test/veoplayer.esm.js'
 
-    new VeoPlayer({
+    let mPlayer = new VeoPlayer({
         id: "test",
         url: "https://s.xlzys.com/play/RdGQ2yaD/index.m3u8",
         poster: "",
@@ -58,13 +58,46 @@
         speed: [2, 1.5, 1, 0.75, 0.5],
         setting: ["loop", "pip"]
     })
+    // 视频预加载
+    player.veoLoadStart((e) => {
+        console.log("视频预加载", e);
+    })
+    // 视频加载完成
+    player.veoLoaded((e) => {
+        console.log("视频加载完成", e);
+    })
+    // 视频缓冲
+    player.veoProgressBuffer((e) => {
+        console.log("视频缓冲", e);
+    })
     //时长改变
     player.veoTimeUpdate((e) => {
 
     })
-   //播放结束
+    //播放结束
     player.veoPlayEnded((e) => {
+        console.log("播放结束", e);
     })
+    // 开始播放
+    player.veoPlay((e) => {
+        console.log("开始播放", e);
+    })
+    // 暂停播放
+    player.veoPause((e) => {
+        console.log("暂停播放", e);
+    })
+    // 视频播放加载异常
+    player.veoError((e) => {
+        console.log("视频播放加载异常", e);
+    })
+    // 加载中
+    player.veoWaiting((e) => {
+        console.log("加载中", e);
+    })
+    // 播放中
+    player.veoPlaying((e) => {
+        console.log("播放中", e);
+    });
 </script>
 
 <script>
