@@ -101,8 +101,6 @@ export class CreateVeoNode extends paramsRules {
         }
         video.setAttribute("crossorigin", "anonymous")
         veoVideo.appendChild(video)
-        // this.#createPoster()
-        // this.#createErrorNode()
     }
     /**
      * 创建 【封面】 节点
@@ -131,7 +129,6 @@ export class CreateVeoNode extends paramsRules {
         const veoErrorMsg = document.createElement("span")
         veoErrorMsg.setAttribute("class", "veo-error-msg")
         veoError.appendChild(veoErrorMsg)
-        // this.#createLoadingNode()
     }
     /**
      * 创建 【加载】 节点
@@ -142,7 +139,6 @@ export class CreateVeoNode extends paramsRules {
         veoLoading.setAttribute("class", "veo-loading")
         veoLoading.innerHTML = veo_loading
         parentNode.appendChild(veoLoading)
-        // this.#createControlNode()
         this.#createIsPlay()
     }
     /**
