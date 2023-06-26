@@ -1,7 +1,8 @@
 export class paramsRules {
     constructor(arg) {
-        const { style } = arg
+        const { style,islive } = arg
         this.style = style
+        this.islive = islive || false
         this.rulusStyle()
     }
     rulusStyle(){
@@ -21,6 +22,13 @@ export class paramsRules {
            
         }else{
             throw new Error(`[style]数据类型错误，期待数据类型值[object]`)
+        }
+    }
+    isBool(){
+        if(typeof this.islive === 'boolean'){
+            return true
+        }else{
+            return false
         }
     }
 }

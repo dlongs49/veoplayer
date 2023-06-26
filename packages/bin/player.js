@@ -8,15 +8,16 @@ export class VeoPlayer extends CreateVeoNode {
     SLIDE_OFFSET = 0.8 // 提示滑块偏移量
     VOLUME_LEN = 100 // 音量总长
     constructor(arg) {
-        let { id, poster, volume, style, url, width, height, speed, autoplay, setting } = arg
+        let { id, poster, volume, style, islive, url, width, height, speed, autoplay, setting } = arg
         if (!document.getElementById(id)) {
             throw new Error(id + " 元素不存在")
         }
 
-        super({ id, style, url, width, height, speed, autoplay, setting })
+        super(arg)
         this.id = id;
         this.poster = poster || null
         this.url = url
+        this.islive = islive
         this.width = width
         this.height = height
         this.speed = speed
@@ -27,7 +28,6 @@ export class VeoPlayer extends CreateVeoNode {
     }
 
     #initNode() {
-
         let veoContainer = document.getElementById(this.id);
         let veo = veoContainer.querySelector("video");
         let veoPoster = veoContainer.querySelector(".veo-poster");
@@ -117,19 +117,23 @@ export class VeoPlayer extends CreateVeoNode {
         this.veoWaiting();
         this.veoError();
         this.veoPlaying();
-        this.#veoMouseTime();
+        if (!this.isBool()) {
+            this.#veoMouseTime();
+            this.#veoSpeedNode()
+            this.#voeDownLoad()
+            this.#handleVeoSetting()
+            this.#mouseInout(veoSpeed, veoSpeedCon, "opacity")
+            this.#mouseInout(veoSetting, veoSettingOutcon, "opacity")
+        }
         this.#veoPlayPause();
         this.#veoConPlay();
         this.veoPlayEnded();
         this.#veoScreen()
         this.#veoKeyCode();
-        this.#veoSpeedNode()
-        this.#voeDownLoad()
-        this.#handleVeoSetting()
+
         this.#veoCapture();
         this.#veoVolume()
-        this.#mouseInout(veoSpeed, veoSpeedCon, "opacity")
-        this.#mouseInout(veoSetting, veoSettingOutcon, "opacity")
+
         this.#mouseInout(veoVolume, veoVolumeOutcon, "opacity")
     }
     /**
@@ -156,43 +160,35 @@ export class VeoPlayer extends CreateVeoNode {
     veoLoaded(callback) {
         let {
             veo,
-            veoCon,
-            veoSpeed,
-            veoDownload,
-            veoSetting,
             veoTimeTotal,
-            veoControl,
-            veoSlash,
             veoLoading
         } = this.#initNode()
 
         veo.addEventListener('loadedmetadata', (e) => {
-            if(callback){
+            if (callback) {
                 callback(e)
             }
-            let spanNode = veoTimeTotal.querySelector("span")
-            let svgNode = veoTimeTotal.querySelectorAll("svg")
+
             let duration = e.target.duration
-            this.durationTime = duration
             // Infinity 超出无穷大 或为 视频实时
-            if (duration != Infinity) {
+            if (this.isBool() === false && duration != Infinity) {
+                let spanNode = veoTimeTotal.querySelector("span")
+                let svgNode = veoTimeTotal.querySelectorAll("svg")
+                this.durationTime = duration
                 let time = formatTime(duration)
                 svgNode[0].style.display = veoLoading.style.display = 'none';
                 spanNode.innerHTML = time
                 this.veoProgressBuffer()
                 this.#veoProcessOffset()
-                if (this.autoplay) {
-                    this.#veoPlayPauseNode("play")
-                } else {
-                    this.#veoPlayPauseNode("pause")
-                }
+
+
             } else {
+                veoLoading.style.display = 'none';
+            }
+            if (this.autoplay) {
                 this.#veoPlayPauseNode("play")
-                const domList = [veoSlash, veoTimeTotal, veoCon, veoSpeed, veoDownload, veoSetting,]
-                veoControl.style.background = "#00000021"
-                for (let i = 0; i < domList.length; i++) {
-                    domList[i].innerHTML = ""
-                }
+            } else {
+                this.#veoPlayPauseNode("pause")
             }
             this.veoTimeUpdate()
 
@@ -250,7 +246,7 @@ export class VeoPlayer extends CreateVeoNode {
      * 视频封面背景
      */
     #veoPoster() {
-        const { veoPoster, veoPosterImg } = this.#initNode()
+        const { veoPosterImg } = this.#initNode()
         if (this.poster) {
             veoPosterImg.src = this.poster
         } else {
@@ -325,10 +321,10 @@ export class VeoPlayer extends CreateVeoNode {
     veoProgressBuffer(callback) {
         let { veoContainer, veo, veoBuff } = this.#initNode()
         veo.addEventListener("progress", (e) => {
-            if(callback){
+            let hc = e.target.buffered.end(0)
+            if (callback) {
                 callback(e)
             }
-            let hc = e.target.buffered.end(0)
             let w = veoContainer.offsetWidth
             let buffWidth = (hc * w) / veo.duration
             veoBuff.style.width = ((buffWidth / w) * 100) + "%"
@@ -440,14 +436,17 @@ export class VeoPlayer extends CreateVeoNode {
 
         veo.addEventListener("timeupdate", (e) => {
             let currentTime = veo.currentTime
-            let veoConWidth = veoCon.offsetWidth
-            let duration = veo.duration
-            const ingWidth = ((veoConWidth * currentTime) / duration) / veoConWidth
+            if (veoCon != null) {
+                let veoConWidth = veoCon.offsetWidth
+                let duration = veo.duration
+                const ingWidth = ((veoConWidth * currentTime) / duration) / veoConWidth
 
-            if (veoIng) {
-                veoIng.style.width = (ingWidth * 100) + '%'
-                veoSub.style.left = ((ingWidth * 100) - 0.5) + '%'
+                if (veoIng) {
+                    veoIng.style.width = (ingWidth * 100) + '%'
+                    veoSub.style.left = ((ingWidth * 100) - 0.5) + '%'
+                }
             }
+
             let time = formatTime(currentTime)
             e.veoFormatTime = time
             // 外部调用

@@ -34,10 +34,11 @@
     let mPlayer = new VeoPlayer({
         id: "test",
         // url: "https://s.xlzys.com/play/RdGQ2yaD/index.m3u8",
-        // url: "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001",
+        url: "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001",
         poster: "",
         width: 665,
         height: 440,
+        islive:true,
         style: {
             // themeColor: "#ff011e",
         },
@@ -69,7 +70,7 @@
     })
     // 视频缓冲
     player.veoProgressBuffer((e) => {
-        console.log("视频缓冲", e);
+        // console.log("视频缓冲", e);
     })
     //时长改变
     player.veoTimeUpdate((e) => {
