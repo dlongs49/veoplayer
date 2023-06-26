@@ -530,7 +530,6 @@ class CreateVeoNode extends paramsRules {
         const urlR = this.urlRules();
         if (!urlR) return
         const suffix = formatVideo(this.url);
-        console.log(suffix);
         const sourceaAdd = (i) => {
             const source = document.createElement("source");
             source.setAttribute("type", "video/mp4");
