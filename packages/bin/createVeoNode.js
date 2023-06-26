@@ -50,7 +50,7 @@ export class CreateVeoNode extends paramsRules {
      */
     #createParentNode() {
         const parentNode = this.getParentNode()
-        this.styleArr = this.rulusStyle()
+        this.styleArr = this.styleRulus()
         this.styleArr.map(v => {
             if (v.key === "themeColor") {
                 parentNode.style.setProperty("--veo-color-primary", v.value || '#fff')

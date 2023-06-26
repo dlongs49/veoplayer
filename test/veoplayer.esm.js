@@ -1,4 +1,4 @@
-import '../../../../../../node_modules/hls.js/dist/hls.min.js';
+import '../../../../../node_modules/hls.js/dist/hls.min.js';
 
 const error_close =   `
 <svg title="加载中..." viewBox="0 0 1035 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -412,11 +412,13 @@ const formatVideo = (params) => {
 
 class paramsRules {
     constructor(arg) {
-        const { style } = arg;
+        const { url,style } = arg;
         this.style = style;
-        this.rulusStyle();
+        this.url  = url;
+        this.styleRulus();
+        this.urlRules();
     }
-    rulusStyle(){
+    styleRulus(){
         if(!this.style){
             return []
         }
@@ -433,6 +435,16 @@ class paramsRules {
            
         }else {
             throw new Error(`[style]数据类型错误，期待数据类型值[object]`)
+        }
+    }
+    urlRules(){
+        if(this.url === null || this.url === undefined || this.url === ""){
+            throw new Error("url为必传项")
+        }
+        if(Object.prototype.toString.call(this.url) === '[object String]' || Object.prototype.toString.call(this.url) === '[object array]'){
+            return true
+        }else {
+            throw new Error("url参数不合法")
         }
     }
 }
@@ -477,7 +489,7 @@ class CreateVeoNode extends paramsRules {
      */
     #createParentNode() {
         const parentNode = this.getParentNode();
-        this.styleArr = this.rulusStyle();
+        this.styleArr = this.styleRulus();
         this.styleArr.map(v => {
             if (v.key === "themeColor") {
                 parentNode.style.setProperty("--veo-color-primary", v.value || '#fff');

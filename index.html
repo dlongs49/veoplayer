@@ -23,18 +23,18 @@
 </style>
 
 <body>
-    <div id="test"></div>
-    <div id="test1" style="margin-top: 20px;"></div>
+<div id="test"></div>
+<div id="test1" style="margin-top: 20px;"></div>
 
-    <video id="videoMedia"></video>
+<video id="videoMedia"></video>
 </body>
 <script type="module">
-    import { VeoPlayer } from './test/veoplayer.esm.js'
+    import {VeoPlayer} from './test/veoplayer.esm.js'
 
     let mPlayer = new VeoPlayer({
         id: "test",
         // url: "https://s.xlzys.com/play/RdGQ2yaD/index.m3u8",
-        // url: "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001",
+        url: "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001",
         poster: "",
         width: 665,
         height: 440,
@@ -105,14 +105,14 @@
     // navigator.mediaDevices.getUserMedia({audio: true, video: true})
     //     .then(data => {
     //         let video = document.querySelector(".veo-video video")
-            // video.srcObject = data
-            // video.onloadedmetadata = () => {
-            //     video.play();
-            // };
-        // })
-        // .catch(e => {
-        //     console.log("error:", e);
-        // });
+    // video.srcObject = data
+    // video.onloadedmetadata = () => {
+    //     video.play();
+    // };
+    // })
+    // .catch(e => {
+    //     console.log("error:", e);
+    // });
 </script>
 
 </html>
