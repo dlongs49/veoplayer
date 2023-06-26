@@ -1,11 +1,12 @@
 export class paramsRules {
     constructor(arg) {
-        const { style,islive } = arg
+        const { style,islive,url } = arg
         this.style = style
         this.islive = islive || false
-        this.rulusStyle()
+        this.url = url
+        this.styleRulus()
     }
-    rulusStyle(){
+    styleRulus(){
         if(!this.style){
             return []
         }
@@ -24,11 +25,20 @@ export class paramsRules {
             throw new Error(`[style]数据类型错误，期待数据类型值[object]`)
         }
     }
+    
     isBool(){
         if(typeof this.islive === 'boolean'){
             return true
         }else{
             return false
+        }
+    }
+    urlRules(){
+        let is = Object.prototype.toString.call(this.url)
+        if(is === '[object String]' || is === "[object Array]"){
+            return is
+        }else{
+            throw new Error(`[url]数据类型错误，期待数据类型值[String or Array]`)
         }
     }
 }

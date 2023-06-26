@@ -176,11 +176,10 @@ export class VeoPlayer extends CreateVeoNode {
                 let svgNode = veoTimeTotal.querySelectorAll("svg")
                 this.durationTime = duration
                 let time = formatTime(duration)
-                svgNode[0].style.display = veoLoading.style.display = 'none';
+                svgNode[0].style.display = svgNode[1].style.display = veoLoading.style.display = 'none';
                 spanNode.innerHTML = time
                 this.veoProgressBuffer()
                 this.#veoProcessOffset()
-
 
             } else {
                 veoLoading.style.display = 'none';

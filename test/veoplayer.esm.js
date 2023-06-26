@@ -389,7 +389,6 @@ const formatTime = (params) => {
     const hour = Math.floor(params / 3600);
     const minutes = Math.floor(params / 60 % 60);
     const seconds = Math.floor(params % 60);
-    // console.log(params,hour,minutes,seconds);
     const hourStr = hour > 0 ? hour + ":" : '';
     const minutesStr = minutes > 9 ? minutes : '0' + minutes;
     const secondsStr = seconds > 9 ? seconds : '0' + seconds;
@@ -403,6 +402,9 @@ const formatTime = (params) => {
  * @example .mp4
  */
 const formatVideo = (params) => {
+    if(params === undefined || params === null || params === ""){
+        return ""
+    }
     let idx = params.lastIndexOf(".");
     if (idx != -1){
         let str = params.slice(idx);
@@ -412,12 +414,13 @@ const formatVideo = (params) => {
 
 class paramsRules {
     constructor(arg) {
-        const { style,islive } = arg;
+        const { style,islive,url } = arg;
         this.style = style;
         this.islive = islive || false;
-        this.rulusStyle();
+        this.url = url;
+        this.styleRulus();
     }
-    rulusStyle(){
+    styleRulus(){
         if(!this.style){
             return []
         }
@@ -436,11 +439,20 @@ class paramsRules {
             throw new Error(`[style]数据类型错误，期待数据类型值[object]`)
         }
     }
+    
     isBool(){
         if(typeof this.islive === 'boolean'){
             return true
         }else {
             return false
+        }
+    }
+    urlRules(){
+        let is = Object.prototype.toString.call(this.url);
+        if(is === '[object String]' || is === "[object Array]"){
+            return is
+        }else {
+            throw new Error(`[url]数据类型错误，期待数据类型值[String or Array]`)
         }
     }
 }
@@ -460,7 +472,7 @@ class CreateVeoNode extends paramsRules {
     #VOLUME_MUTE_LABEL = "静音"
     #VIDEO_FORMAT_LIST = [".m3u8", ".mp4", ".webm"]
     constructor(arg) {
-        let { id, style, url, width,islive, height, speed, autoplay, setting: settings } = arg;
+        let { id, style, url, width, islive, height, speed, autoplay, setting: settings } = arg;
         super(arg);
         this.idNode = id;
         this.style = style;
@@ -486,7 +498,7 @@ class CreateVeoNode extends paramsRules {
      */
     #createParentNode() {
         const parentNode = this.getParentNode();
-        this.styleArr = this.rulusStyle();
+        this.styleArr = this.styleRulus();
         this.styleArr.map(v => {
             if (v.key === "themeColor") {
                 parentNode.style.setProperty("--veo-color-primary", v.value || '#fff');
@@ -515,25 +527,35 @@ class CreateVeoNode extends paramsRules {
      */
     #createVideoNode(veoVideo) {
         const video = document.createElement("video");
+        const urlR = this.urlRules();
+        if (!urlR) return
         const suffix = formatVideo(this.url);
-        if (suffix.includes(".m3u8")) {
-
-            let hls = new Hls();
-            hls.loadSource(this.url);
-            hls.attachMedia(video);
-
-        } else {
-            const suf = this.#VIDEO_FORMAT_LIST.find(v => suffix.includes(v));
+        console.log(suffix);
+        const sourceaAdd = (i) => {
             const source = document.createElement("source");
-            if (suf) {
-                source.setAttribute("type", "video/" + suf.slice(1));
-            } else {
-                source.setAttribute("type", "video/mp4");
-            }
+            source.setAttribute("type", "video/mp4");
             video.autoplay = this.autoplay;
+            source.src = i === "string" ? this.url : this.url[i];
             video.appendChild(source);
-            source.src = this.url;
+        };
+
+        if (urlR === "[object String]") {
+            if (suffix.includes(".m3u8")) {
+                let hls = new Hls();
+                hls.loadSource(this.url);
+                hls.attachMedia(video);
+
+            } else {
+                sourceaAdd("string");
+            }
+        } else if (urlR === "[object Array]") {
+            for (let i = 0; i < this.url.length; i++) {
+                sourceaAdd(i);
+            }
         }
+
+
+
         video.setAttribute("crossorigin", "anonymous");
         veoVideo.appendChild(video);
     }
@@ -602,7 +624,7 @@ class CreateVeoNode extends paramsRules {
         const veoControl = document.createElement("div");
         parentNode.appendChild(veoControl);
         veoControl.setAttribute("class", "veo-control");
-        if(!this.isBool()){
+        if (!this.isBool()) {
             const veoProcessCon = document.createElement("div");
             veoProcessCon.setAttribute("class", "veo-process-con");
             veoControl.appendChild(veoProcessCon);
@@ -614,7 +636,7 @@ class CreateVeoNode extends paramsRules {
         /*-------------*/
         this.#getControlNode();
         this.#createPlayerNode();
-       
+
     }
     /**
      * @returns {Object} 返回底部控制区域
@@ -666,7 +688,7 @@ class CreateVeoNode extends paramsRules {
             VEO_PLAYER_CON_NODE.appendChild(veoPlayer);
         }
         this.#createPlayPauseNode();
-        if(!this.isBool()){
+        if (!this.isBool()) {
             this.#createSpeedNode();
             this.#createDownloadNode();
             this.#createSettingNode();
@@ -712,8 +734,8 @@ class CreateVeoNode extends paramsRules {
             "veo-slash",
             "veo-time-total",
         ];
-        if(this.isBool()){
-            VEO_TIME_LIST.splice(1,2);
+        if (this.isBool()) {
+            VEO_TIME_LIST.splice(1, 2);
         }
         for (let i = 0; i < VEO_TIME_LIST.length; i++) {
             const veoTimeNode = document.createElement("div");
@@ -869,7 +891,7 @@ class CreateVeoNode extends paramsRules {
         let v = veoVolume.getElementsByTagName("svg");
         v[0].setAttribute("data-val", "volume");
         v[1].setAttribute("data-val", "volume-mute");
-       
+
     }
     /**
      * 创建 【全屏 & 退出全屏】节点
@@ -1061,11 +1083,10 @@ class VeoPlayer extends CreateVeoNode {
                 let svgNode = veoTimeTotal.querySelectorAll("svg");
                 this.durationTime = duration;
                 let time = formatTime(duration);
-                svgNode[0].style.display = veoLoading.style.display = 'none';
+                svgNode[0].style.display = svgNode[1].style.display = veoLoading.style.display = 'none';
                 spanNode.innerHTML = time;
                 this.veoProgressBuffer();
                 this.#veoProcessOffset();
-
 
             } else {
                 veoLoading.style.display = 'none';

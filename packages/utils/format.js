@@ -15,7 +15,6 @@ export const formatTime = (params) => {
     const hour = Math.floor(params / 3600)
     const minutes = Math.floor(params / 60 % 60)
     const seconds = Math.floor(params % 60)
-    // console.log(params,hour,minutes,seconds);
     const hourStr = hour > 0 ? hour + ":" : ''
     const minutesStr = minutes > 9 ? minutes : '0' + minutes
     const secondsStr = seconds > 9 ? seconds : '0' + seconds
@@ -29,6 +28,9 @@ export const formatTime = (params) => {
  * @example .mp4
  */
 export const formatVideo = (params) => {
+    if(params === undefined || params === null || params === ""){
+        return ""
+    }
     let idx = params.lastIndexOf(".")
     if (idx != -1){
         let str = params.slice(idx)

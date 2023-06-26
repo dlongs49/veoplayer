@@ -25,7 +25,7 @@ export class CreateVeoNode extends paramsRules {
     #VOLUME_MUTE_LABEL = "静音"
     #VIDEO_FORMAT_LIST = [".m3u8", ".mp4", ".webm"]
     constructor(arg) {
-        let { id, style, url, width,islive, height, speed, autoplay, setting: settings } = arg
+        let { id, style, url, width, islive, height, speed, autoplay, setting: settings } = arg
         super(arg)
         this.idNode = id
         this.style = style
@@ -51,7 +51,7 @@ export class CreateVeoNode extends paramsRules {
      */
     #createParentNode() {
         const parentNode = this.getParentNode()
-        this.styleArr = this.rulusStyle()
+        this.styleArr = this.styleRulus()
         this.styleArr.map(v => {
             if (v.key === "themeColor") {
                 parentNode.style.setProperty("--veo-color-primary", v.value || '#fff')
@@ -80,25 +80,35 @@ export class CreateVeoNode extends paramsRules {
      */
     #createVideoNode(veoVideo) {
         const video = document.createElement("video")
+        const urlR = this.urlRules()
+        if (!urlR) return
         const suffix = formatVideo(this.url)
-        if (suffix.includes(".m3u8")) {
-
-            let hls = new Hls();
-            hls.loadSource(this.url)
-            hls.attachMedia(video)
-
-        } else {
-            const suf = this.#VIDEO_FORMAT_LIST.find(v => suffix.includes(v))
+        console.log(suffix);
+        const sourceaAdd = (i) => {
             const source = document.createElement("source")
-            if (suf) {
-                source.setAttribute("type", "video/" + suf.slice(1))
-            } else {
-                source.setAttribute("type", "video/mp4")
-            }
+            source.setAttribute("type", "video/mp4")
             video.autoplay = this.autoplay
+            source.src = i === "string" ? this.url : this.url[i]
             video.appendChild(source)
-            source.src = this.url
         }
+
+        if (urlR === "[object String]") {
+            if (suffix.includes(".m3u8")) {
+                let hls = new Hls();
+                hls.loadSource(this.url)
+                hls.attachMedia(video)
+
+            } else {
+                sourceaAdd("string")
+            }
+        } else if (urlR === "[object Array]") {
+            for (let i = 0; i < this.url.length; i++) {
+                sourceaAdd(i)
+            }
+        }
+
+
+
         video.setAttribute("crossorigin", "anonymous")
         veoVideo.appendChild(video)
     }
@@ -167,7 +177,7 @@ export class CreateVeoNode extends paramsRules {
         const veoControl = document.createElement("div")
         parentNode.appendChild(veoControl)
         veoControl.setAttribute("class", "veo-control")
-        if(!this.isBool()){
+        if (!this.isBool()) {
             const veoProcessCon = document.createElement("div")
             veoProcessCon.setAttribute("class", "veo-process-con")
             veoControl.appendChild(veoProcessCon)
@@ -179,7 +189,7 @@ export class CreateVeoNode extends paramsRules {
         /*-------------*/
         this.#getControlNode()
         this.#createPlayerNode()
-       
+
     }
     /**
      * @returns {Object} 返回底部控制区域
@@ -231,7 +241,7 @@ export class CreateVeoNode extends paramsRules {
             VEO_PLAYER_CON_NODE.appendChild(veoPlayer)
         }
         this.#createPlayPauseNode();
-        if(!this.isBool()){
+        if (!this.isBool()) {
             this.#createSpeedNode();
             this.#createDownloadNode();
             this.#createSettingNode()
@@ -277,8 +287,8 @@ export class CreateVeoNode extends paramsRules {
             "veo-slash",
             "veo-time-total",
         ]
-        if(this.isBool()){
-            VEO_TIME_LIST.splice(1,2)
+        if (this.isBool()) {
+            VEO_TIME_LIST.splice(1, 2)
         }
         for (let i = 0; i < VEO_TIME_LIST.length; i++) {
             const veoTimeNode = document.createElement("div")
@@ -434,7 +444,7 @@ export class CreateVeoNode extends paramsRules {
         let v = veoVolume.getElementsByTagName("svg")
         v[0].setAttribute("data-val", "volume")
         v[1].setAttribute("data-val", "volume-mute")
-       
+
     }
     /**
      * 创建 【全屏 & 退出全屏】节点
