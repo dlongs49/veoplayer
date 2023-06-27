@@ -2,7 +2,7 @@
   "name": "veoplayer",
   "version": "1.0.1",
   "description": "A native JavaScript concise video player",
-  "main": "index.js",
+  "main": "./dist/veoplayer.esm.min.js",
   "type": "module",
   "scripts": {
     "test": "node ./test/index.js",
@@ -16,6 +16,10 @@
     "vidoe",
     "player"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dlongs49/veoplayer.git"
+  },
   "author": "dinglong",
   "license": "MIT",
   "devDependencies": {
