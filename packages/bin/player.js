@@ -7,7 +7,7 @@ export class VeoPlayer extends CreateVeoNode {
     SLIDE_OFFSET = 0.8 // 提示滑块偏移量
     VOLUME_LEN = 100 // 音量总长
     constructor(arg) {
-        let { id, poster, volume, style, islive, url, width, height, speed, autoplay, setting } = arg
+        let { id, poster, volume, style, plugins, islive, url, width, height, speed, autoplay, setting } = arg
         if (!document.getElementById(id)) {
             throw new Error(id + " 元素不存在")
         }
@@ -52,6 +52,7 @@ export class VeoPlayer extends CreateVeoNode {
         let veoSpeed = veoContainer.querySelector(".veo-speed")
         let veoSpeedCon = veoContainer.querySelector(".veo-speed-outcon")
         let veoVolume = veoContainer.querySelector(".veo-volume")
+
         let veoVolumeProgress = veoContainer.querySelector(".veo-volume-progress")
         let veoVolumeProgressPertxt = veoContainer.querySelector(".veo-volume-pertxt")
         let veoVolumeProgressLine = veoContainer.querySelector(".veo-volume-progress-line")
@@ -108,7 +109,7 @@ export class VeoPlayer extends CreateVeoNode {
     }
 
     #initPlayer() {
-        let { veo, veoSpeed, veoSpeedCon, veoSetting, veoSettingOutcon, veoVolume, veoVolumeOutcon } = this.#initNode()
+        let { veo, veoSpeed, veoDownload, veoCapture, veoSpeedCon, veoSetting, veoSettingOutcon, veoVolume, veoVolumeOutcon } = this.#initNode()
         veo.volume = this.volume / 100
         this.veoLoadStart();
         this.veoLoaded();
@@ -118,11 +119,20 @@ export class VeoPlayer extends CreateVeoNode {
         this.veoPlaying();
         if (!this.isBool()) {
             this.#veoMouseTime();
-            this.#veoSpeedNode()
-            this.#voeDownLoad()
-            this.#handleVeoSetting()
-            this.#mouseInout(veoSpeed, veoSpeedCon, "opacity")
-            this.#mouseInout(veoSetting, veoSettingOutcon, "opacity")
+            if (veoSpeed != null) {
+                this.#veoSpeedNode()
+                this.#mouseInout(veoSpeed, veoSpeedCon, "opacity")
+            }
+            if (veoDownload != null) {
+                this.#voeDownLoad()
+            }
+            if (veoSetting != null) {
+                this.#handleVeoSetting()
+            }
+            if (veoCapture != null) {
+                this.#veoCapture();
+                this.#mouseInout(veoSetting, veoSettingOutcon, "opacity")
+            }
         }
         this.#veoPlayPause();
         this.#veoConPlay();
@@ -130,7 +140,6 @@ export class VeoPlayer extends CreateVeoNode {
         this.#veoScreen()
         this.#veoKeyCode();
 
-        this.#veoCapture();
         this.#veoVolume()
 
         this.#mouseInout(veoVolume, veoVolumeOutcon, "opacity")

@@ -25,11 +25,12 @@ export class CreateVeoNode extends paramsRules {
     #VOLUME_MUTE_LABEL = "静音"
     #VIDEO_FORMAT_LIST = [".m3u8", ".mp4", ".webm"]
     constructor(arg) {
-        let { id, style, url, width, islive, height, speed, autoplay, setting: settings } = arg
+        let { id, style, url, width,plugins, islive, height, speed, autoplay, setting: settings } = arg
         super(arg)
         this.idNode = id
         this.style = style
         this.url = url
+        this.plugins = plugins || []
         this.islive = islive
         this.width = width || 665
         this.height = height || 440
@@ -241,11 +242,22 @@ export class CreateVeoNode extends paramsRules {
         }
         this.#createPlayPauseNode();
         if (!this.isBool()) {
-            this.#createSpeedNode();
-            this.#createDownloadNode();
-            this.#createSettingNode()
+            for (let i = 0; i < this.plugins.length; i++) {
+                let item = this.plugins[i]
+                if(item === "speed") {
+                    this.#createSpeedNode();
+                }
+                if(item === "download") {
+                    this.#createDownloadNode();
+                }
+                if(item === "setting"){
+                    this.#createSettingNode()
+                }
+                if(item === "capture"){
+                    this.#createCameraNode()
+                }
+            }
         }
-        this.#createCameraNode()
         this.#createVolumeNode();
         this.#createFullScreenNode()
     }

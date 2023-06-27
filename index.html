@@ -39,14 +39,15 @@
         poster: "",
         // width: 665,
         // height: 440,
-        // islive: true,
+        islive: true,
         style: {
             // themeColor: "#ff011e",
         },
         // volume: 50,
         // autoplay: true,
         speed: [2, 1.5, 1, 0.75],
-        setting: ["loop", "pip"]
+        setting: ["loop", "pip"],
+        // plugins:["speed","download","setting","capture"]
     })
 
     let player = new VeoPlayer({
@@ -59,7 +60,8 @@
             processColor: "#91CB40"
         },
         speed: [2, 1.5, 1, 0.75, 0.5],
-        setting: ["loop", "pip"]
+        setting: ["loop", "pip"],
+        plugins:["speed","download","setting","capture"]
     })
     // 视频预加载
     player.veoLoadStart((e) => {
