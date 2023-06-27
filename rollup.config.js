@@ -9,7 +9,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills'
 import strip from "@rollup/plugin-strip";
 import json from './package.json' assert {type: "json"}
 export default {
-    input: "./packages/main.js",
+    input: ["./packages/main.js"],
     external: ["hls.js"],
     globals: {
         Hls: "Hls"

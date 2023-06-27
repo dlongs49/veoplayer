@@ -9,7 +9,7 @@
     "out:css": "node ./packages/watch.js",
     "watch:css": "sass --watch ./packages/style:./packages/style",
     "build:css": "sass --style compressed ./packages/style:./packages/style",
-    "serve": "rollup -c -w"
+    "serve": "rollup -w -c"
   },
   "keywords": [
     "vidoe",
