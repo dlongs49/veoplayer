@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>veoplayer</title>
-    <link rel="stylesheet" href="./packages/style/style.css">
 </head>
 <style>
     html,
@@ -29,7 +28,8 @@
 <video id="videoMedia"></video>
 </body>
 <script type="module">
-    import {VeoPlayer} from './test/veoplayer.esm.js'
+    import {VeoPlayer} from './dist/veoplayer.esm.min.js'
+    // import './dist/veoplayer.global.min.js'
 
     let mPlayer = new VeoPlayer({
         id: "test",
