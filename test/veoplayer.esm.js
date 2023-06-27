@@ -1,5 +1,3 @@
-import '../../../../../node_modules/hls.js/dist/hls.min.js';
-
 const error_close =   `
 <svg title="加载中..." viewBox="0 0 1035 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
              width="16" height="16">
@@ -457,6 +455,7 @@ class paramsRules {
     }
 }
 
+// import "../style/style.css"
 class CreateVeoNode extends paramsRules {
     #PLAY_LABEL = "播放"
     #PAUSE_LABEL = "暂停"
@@ -472,17 +471,18 @@ class CreateVeoNode extends paramsRules {
     #VOLUME_MUTE_LABEL = "静音"
     #VIDEO_FORMAT_LIST = [".m3u8", ".mp4", ".webm"]
     constructor(arg) {
-        let { id, style, url, width, islive, height, speed, autoplay, setting: settings } = arg;
+        let { id, style, url, width,plugins, islive, height, speed, autoplay, setting: settings } = arg;
         super(arg);
         this.idNode = id;
         this.style = style;
         this.url = url;
+        this.plugins = plugins || [];
         this.islive = islive;
         this.width = width || 665;
         this.height = height || 440;
-        this.speed = speed;
+        this.speed = speed || [2, 1.5, 1, 0.75, 0.5];
         this.autoplay = autoplay;
-        this.settings = settings;
+        this.settings = settings || ["loop"];
         this.#createParentNode();
     }
     /**
@@ -688,11 +688,22 @@ class CreateVeoNode extends paramsRules {
         }
         this.#createPlayPauseNode();
         if (!this.isBool()) {
-            this.#createSpeedNode();
-            this.#createDownloadNode();
-            this.#createSettingNode();
+            for (let i = 0; i < this.plugins.length; i++) {
+                let item = this.plugins[i];
+                if(item === "speed") {
+                    this.#createSpeedNode();
+                }
+                if(item === "download") {
+                    this.#createDownloadNode();
+                }
+                if(item === "setting"){
+                    this.#createSettingNode();
+                }
+                if(item === "capture"){
+                    this.#createCameraNode();
+                }
+            }
         }
-        this.#createCameraNode();
         this.#createVolumeNode();
         this.#createFullScreenNode();
     }
@@ -906,15 +917,13 @@ class CreateVeoNode extends paramsRules {
     }
 }
 
-// import './appendcss.js'
-
 class VeoPlayer extends CreateVeoNode {
     durationTime = 1
     PERCENTILE = 100 // 百分比
     SLIDE_OFFSET = 0.8 // 提示滑块偏移量
     VOLUME_LEN = 100 // 音量总长
     constructor(arg) {
-        let { id, poster, volume, style, islive, url, width, height, speed, autoplay, setting } = arg;
+        let { id, poster, volume, style, plugins, islive, url, width, height, speed, autoplay, setting } = arg;
         if (!document.getElementById(id)) {
             throw new Error(id + " 元素不存在")
         }
@@ -959,6 +968,7 @@ class VeoPlayer extends CreateVeoNode {
         let veoSpeed = veoContainer.querySelector(".veo-speed");
         let veoSpeedCon = veoContainer.querySelector(".veo-speed-outcon");
         let veoVolume = veoContainer.querySelector(".veo-volume");
+
         let veoVolumeProgress = veoContainer.querySelector(".veo-volume-progress");
         let veoVolumeProgressPertxt = veoContainer.querySelector(".veo-volume-pertxt");
         let veoVolumeProgressLine = veoContainer.querySelector(".veo-volume-progress-line");
@@ -1015,7 +1025,7 @@ class VeoPlayer extends CreateVeoNode {
     }
 
     #initPlayer() {
-        let { veo, veoSpeed, veoSpeedCon, veoSetting, veoSettingOutcon, veoVolume, veoVolumeOutcon } = this.#initNode();
+        let { veo, veoSpeed, veoDownload, veoCapture, veoSpeedCon, veoSetting, veoSettingOutcon, veoVolume, veoVolumeOutcon } = this.#initNode();
         veo.volume = this.volume / 100;
         this.veoLoadStart();
         this.veoLoaded();
@@ -1025,11 +1035,20 @@ class VeoPlayer extends CreateVeoNode {
         this.veoPlaying();
         if (!this.isBool()) {
             this.#veoMouseTime();
-            this.#veoSpeedNode();
-            this.#voeDownLoad();
-            this.#handleVeoSetting();
-            this.#mouseInout(veoSpeed, veoSpeedCon, "opacity");
-            this.#mouseInout(veoSetting, veoSettingOutcon, "opacity");
+            if (veoSpeed != null) {
+                this.#veoSpeedNode();
+                this.#mouseInout(veoSpeed, veoSpeedCon, "opacity");
+            }
+            if (veoDownload != null) {
+                this.#voeDownLoad();
+            }
+            if (veoSetting != null) {
+                this.#handleVeoSetting();
+            }
+            if (veoCapture != null) {
+                this.#veoCapture();
+                this.#mouseInout(veoSetting, veoSettingOutcon, "opacity");
+            }
         }
         this.#veoPlayPause();
         this.#veoConPlay();
@@ -1037,7 +1056,6 @@ class VeoPlayer extends CreateVeoNode {
         this.#veoScreen();
         this.#veoKeyCode();
 
-        this.#veoCapture();
         this.#veoVolume();
 
         this.#mouseInout(veoVolume, veoVolumeOutcon, "opacity");

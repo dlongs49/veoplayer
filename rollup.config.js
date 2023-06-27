@@ -22,7 +22,7 @@ export default {
     {
         file: `dist/${json.name}.global.min.js`,
         format: "iife",
-        name: json.name
+        name:"VeoPlayer"
     }],
     plugins: [
         babel({
@@ -34,6 +34,7 @@ export default {
                 cssnext({ warnForDuplicates: false, }),
             ],
             extensions: [ '.css' ],
+            // extract: 'css/index.css' 
         }),
         strip(),
         nodeResolve(),
