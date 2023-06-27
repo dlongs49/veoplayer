@@ -1,10 +1,10 @@
 export class paramsRules {
     constructor(arg) {
-        const { url,style } = arg
+        const { style,islive,url } = arg
         this.style = style
-        this.url  = url
+        this.islive = islive || false
+        this.url = url
         this.styleRulus()
-        this.urlRules()
     }
     styleRulus(){
         if(!this.style){
@@ -25,15 +25,20 @@ export class paramsRules {
             throw new Error(`[style]数据类型错误，期待数据类型值[object]`)
         }
     }
-    urlRules(){
-        if(this.url === null || this.url === undefined || this.url === ""){
-            throw new Error("url为必传项")
-            return
-        }
-        if(Object.prototype.toString.call(this.url) === '[object String]' || Object.prototype.toString.call(this.url) === '[object array]'){
+    
+    isBool(){
+        if(typeof this.islive === 'boolean'){
             return true
         }else{
-            throw new Error("url参数不合法")
+            return false
+        }
+    }
+    urlRules(){
+        let is = Object.prototype.toString.call(this.url)
+        if(is === '[object String]' || is === "[object Array]"){
+            return is
+        }else{
+            throw new Error(`[url]数据类型错误，期待数据类型值[String or Array]`)
         }
     }
 }

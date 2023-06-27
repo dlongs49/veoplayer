@@ -25,11 +25,12 @@ export class CreateVeoNode extends paramsRules {
     #VOLUME_MUTE_LABEL = "静音"
     #VIDEO_FORMAT_LIST = [".m3u8", ".mp4", ".webm"]
     constructor(arg) {
-        let { id, style, url, width, height, speed, autoplay, setting: settings } = arg
+        let { id, style, url, width, islive, height, speed, autoplay, setting: settings } = arg
         super(arg)
         this.idNode = id
         this.style = style
         this.url = url
+        this.islive = islive
         this.width = width || 665
         this.height = height || 440
         this.speed = speed
@@ -67,35 +68,48 @@ export class CreateVeoNode extends paramsRules {
         veoVideo.setAttribute("data-type", "play")
         parentNode.appendChild(veoVideo)
         this.#createVideoNode(veoVideo)
+
+        this.#createPoster()
+        this.#createErrorNode()
+        this.#createLoadingNode()
+        this.#createControlNode()
+
     }
     /**
      * 创建【视频】节点
      */
     #createVideoNode(veoVideo) {
         const video = document.createElement("video")
+        const urlR = this.urlRules()
+        if (!urlR) return
         const suffix = formatVideo(this.url)
-        if (suffix.includes(".m3u8")) {
-
-            let hls = new Hls();
-            hls.loadSource(this.url)
-            hls.attachMedia(video)
-
-        } else {
-            const suf = this.#VIDEO_FORMAT_LIST.find(v => suffix.includes(v))
+        const sourceaAdd = (i) => {
             const source = document.createElement("source")
-            if (suf) {
-                source.setAttribute("type", "video/" + suf.slice(1))
-            } else {
-                source.setAttribute("type", "video/mp4")
-            }
+            source.setAttribute("type", "video/mp4")
             video.autoplay = this.autoplay
+            source.src = i === "string" ? this.url : this.url[i]
             video.appendChild(source)
-            source.src = this.url
         }
+
+        if (urlR === "[object String]") {
+            if (suffix.includes(".m3u8")) {
+                let hls = new Hls();
+                hls.loadSource(this.url)
+                hls.attachMedia(video)
+
+            } else {
+                sourceaAdd("string")
+            }
+        } else if (urlR === "[object Array]") {
+            for (let i = 0; i < this.url.length; i++) {
+                sourceaAdd(i)
+            }
+        }
+
+
+
         video.setAttribute("crossorigin", "anonymous")
         veoVideo.appendChild(video)
-        this.#createPoster()
-        this.#createErrorNode()
     }
     /**
      * 创建 【封面】 节点
@@ -124,7 +138,6 @@ export class CreateVeoNode extends paramsRules {
         const veoErrorMsg = document.createElement("span")
         veoErrorMsg.setAttribute("class", "veo-error-msg")
         veoError.appendChild(veoErrorMsg)
-        this.#createLoadingNode()
     }
     /**
      * 创建 【加载】 节点
@@ -135,7 +148,6 @@ export class CreateVeoNode extends paramsRules {
         veoLoading.setAttribute("class", "veo-loading")
         veoLoading.innerHTML = veo_loading
         parentNode.appendChild(veoLoading)
-        this.#createControlNode()
         this.#createIsPlay()
     }
     /**
@@ -164,16 +176,19 @@ export class CreateVeoNode extends paramsRules {
         const veoControl = document.createElement("div")
         parentNode.appendChild(veoControl)
         veoControl.setAttribute("class", "veo-control")
-        const veoProcessCon = document.createElement("div")
-        veoProcessCon.setAttribute("class", "veo-process-con")
-        veoControl.appendChild(veoProcessCon)
-
+        if (!this.isBool()) {
+            const veoProcessCon = document.createElement("div")
+            veoProcessCon.setAttribute("class", "veo-process-con")
+            veoControl.appendChild(veoProcessCon)
+            this.#createProgressNode()
+        }
         const veoPlayerCon = document.createElement("div")
         veoPlayerCon.setAttribute("class", "veo-player-con")
         veoControl.appendChild(veoPlayerCon)
         /*-------------*/
         this.#getControlNode()
-        this.#createProgressNode()
+        this.#createPlayerNode()
+
     }
     /**
      * @returns {Object} 返回底部控制区域
@@ -208,7 +223,6 @@ export class CreateVeoNode extends paramsRules {
                 }
             }
         }
-        this.#createPlayerNode()
     }
     /**
      * 创建 【播放区域】节点
@@ -226,6 +240,14 @@ export class CreateVeoNode extends paramsRules {
             VEO_PLAYER_CON_NODE.appendChild(veoPlayer)
         }
         this.#createPlayPauseNode();
+        if (!this.isBool()) {
+            this.#createSpeedNode();
+            this.#createDownloadNode();
+            this.#createSettingNode()
+        }
+        this.#createCameraNode()
+        this.#createVolumeNode();
+        this.#createFullScreenNode()
     }
     /**
      * @returns {Object} 返回底部左中右区域
@@ -259,12 +281,14 @@ export class CreateVeoNode extends paramsRules {
         const veoTime = document.createElement("div")
         veoTime.setAttribute("class", "veo-time")
         VEO_LEFT_CONTROL_NODE.appendChild(veoTime)
-        const VEO_TIME_LIST = [
+        let VEO_TIME_LIST = [
             "veo-time-ing",
             "veo-slash",
             "veo-time-total",
         ]
-
+        if (this.isBool()) {
+            VEO_TIME_LIST.splice(1, 2)
+        }
         for (let i = 0; i < VEO_TIME_LIST.length; i++) {
             const veoTimeNode = document.createElement("div")
             veoTimeNode.setAttribute("class", VEO_TIME_LIST[i])
@@ -281,9 +305,6 @@ export class CreateVeoNode extends paramsRules {
                 veoTimeNode.appendChild(span)
             }
         }
-
-
-        this.#createSpeedNode();
     }
     /**
     * 待定
@@ -320,7 +341,6 @@ export class CreateVeoNode extends paramsRules {
                 veoSpeedItem.setAttribute("class", "veo-speed-item veo-speed-active")
             }
         }
-        this.#createDownloadNode();
     }
     /**
      * 创建 【下载】节点
@@ -332,7 +352,6 @@ export class CreateVeoNode extends paramsRules {
         veoDownload.setAttribute("label", this.#DOWNLOAD_LABEL)
         veoDownload.innerHTML = download
         VEO_RIGHT_CONTROL_NODE.appendChild(veoDownload)
-        this.#createSettingNode()
     }
     /**
      * 创建 【设置】节点
@@ -373,7 +392,6 @@ export class CreateVeoNode extends paramsRules {
             }
         }
         VEO_RIGHT_CONTROL_NODE.appendChild(veoSetting)
-        this.#createCameraNode()
     }
     /**
      * 创建 【截图】节点
@@ -385,7 +403,6 @@ export class CreateVeoNode extends paramsRules {
         veoCapture.setAttribute("label", this.#CAPTURE_LABEL)
         veoCapture.innerHTML = capture
         VEO_RIGHT_CONTROL_NODE.appendChild(veoCapture)
-        this.#createVolumeNode()
     }
     /**
      * 创建 【音量】节点
@@ -426,7 +443,7 @@ export class CreateVeoNode extends paramsRules {
         let v = veoVolume.getElementsByTagName("svg")
         v[0].setAttribute("data-val", "volume")
         v[1].setAttribute("data-val", "volume-mute")
-        this.#createFullScreenNode()
+
     }
     /**
      * 创建 【全屏 & 退出全屏】节点
