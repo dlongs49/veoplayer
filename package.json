@@ -6,8 +6,6 @@
   "type": "module",
   "scripts": {
     "test": "node ./test/index.js",
-    "dev:serve": "node ./scripts/server.cjs",
-    "dev": "node ./scripts/rollup.watch.cjs",
     "out:css": "node ./packages/watch.js",
     "watch:css": "sass --watch ./packages/style:./packages/style",
     "build:css": "sass --style compressed ./packages/style:./packages/style",
