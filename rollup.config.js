@@ -2,11 +2,10 @@ import { terser } from 'rollup-plugin-terser';
 // import postcss from "rollup-plugin-postcss";
 // import autoprefixer from "autoprefixer"
 // import cssnano from "cssnano";
-import commonjs from '@rollup/plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve'; // 定位 node-modules 模块
 
 import nodePolyfills from 'rollup-plugin-node-polyfills'
 import strip from "@rollup/plugin-strip";
@@ -31,7 +30,6 @@ export default {
         // postcss({
         //     plugins: [autoprefixer(), cssnano()],
         // }),
-        commonjs(),
         strip(),
         nodeResolve(),
         livereload(),
