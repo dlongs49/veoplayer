@@ -1,4 +1,3 @@
-import Hls from 'hls.js'
 import { error_close, error_time } from '../svg_js/error_close.js'
 import { veo_loading, time_loading } from '../svg_js/loading.js'
 import { play, pause, play_mutual, pause_mutual } from '../svg_js/play_pause.js'
@@ -10,6 +9,7 @@ import { volume, volume_mute } from '../svg_js/volume.js'
 import { full_screen, exit_full_screen } from '../svg_js/screen.js'
 import { formatVideo } from '../utils/format.js'
 import { paramsRules } from './paramsRules.js'
+import "../style/style.css"
 export class CreateVeoNode extends paramsRules {
     #PLAY_LABEL = "播放"
     #PAUSE_LABEL = "暂停"

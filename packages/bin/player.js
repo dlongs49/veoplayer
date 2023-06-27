@@ -1,6 +1,6 @@
 import { CreateVeoNode } from "./createVeoNode.js";
 import { formatTime } from "../utils/format.js";
-import './appendcss.js'
+// import './appendcss.js'
 
 export class VeoPlayer extends CreateVeoNode {
     durationTime = 1
