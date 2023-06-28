@@ -2,7 +2,18 @@
   "name": "veoplayer",
   "version": "1.0.1",
   "description": "A native JavaScript concise video player",
-  "main": "./dist/veoplayer.esm.min.js",
+  "main": "dist/veoplayer.esm.min.js",
+  "module": "dist/veoplayer.esm.min.js",
+  "unpkg": "dist/veoplayer.global.min.js",
+  "jsdelivr": "dist/veoplayer.global.min.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    "./style": "./dist/css/index.css",
+    ".": "./dist/veoplayer.esm.min.js"
+  },
   "type": "module",
   "scripts": {
     "test": "node ./test/index.js",
@@ -19,6 +30,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/dlongs49/veoplayer.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "tag": "latest"
   },
   "author": "dinglong",
   "license": "MIT",
