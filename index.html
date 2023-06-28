@@ -33,6 +33,7 @@
 <script>
 new VeoPlayer({
         id: "test2",
+        // id: document.querySelector("#test2"),
         url: "https://s.xlzys.com/play/RdGQ2yaD/index.m3u8",
         poster: "",
         width: 665,
@@ -48,10 +49,12 @@ new VeoPlayer({
     })
 </script>
 <script type="module">
-    import  VeoPlayer  from './dist/veoplayer.esm.min.js'
+    // import  VeoPlayer  from './dist/veoplayer.esm.min.js'
+    import  VeoPlayer  from './test/veoplayer.esm.js'
 
     let mPlayer = new VeoPlayer({
-        id: "test",
+        // id: "test",
+         id: document.querySelector("#test"),
         // url: "https://s.xlzys.com/play/RdGQ2yaD/index.m3u8",
         url: "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001",
         poster: "",

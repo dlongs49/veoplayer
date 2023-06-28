@@ -409,6 +409,22 @@ const formatVideo = (params) => {
         return str
     }
 };
+/**
+ * 判断是否为 dom 节点
+ * @param {String}
+ * @returns boolean
+ */
+const isDom = (dom) =>{
+    if(dom === null || dom === undefined){
+        throw new Error("元素不存在")
+    }
+    if (typeof dom === "string") {
+       return true
+    }
+    if (typeof dom === "object" && dom.nodeName === "string" && dom.nodeType === 1) {
+        return false
+    }
+};
 
 class paramsRules {
     constructor(arg) {
@@ -490,7 +506,8 @@ class CreateVeoNode extends paramsRules {
      * @returns ElementNode
      */
     getParentNode() {
-        return document.getElementById(this.idNode)
+        let isNode = isDom(this.idNode);
+        return isNode ? document.getElementById(this.idNode) : this.idNode
     }
 
     /**
@@ -922,14 +939,13 @@ class VeoPlayer extends CreateVeoNode {
     PERCENTILE = 100 // 百分比
     SLIDE_OFFSET = 0.8 // 提示滑块偏移量
     VOLUME_LEN = 100 // 音量总长
+    isNode = true;
     constructor(arg) {
         let { id, poster, volume, style, plugins, islive, url, width, height, speed, autoplay, setting } = arg;
-        if (!document.getElementById(id)) {
-            throw new Error(id + " 元素不存在")
-        }
-
+        
         super(arg);
         this.id = id;
+        this.isNode = isDom(id);
         this.poster = poster || null;
         this.url = url;
         this.islive = islive;
@@ -943,7 +959,7 @@ class VeoPlayer extends CreateVeoNode {
     }
 
     #initNode() {
-        let veoContainer = document.getElementById(this.id);
+        let veoContainer = this.isNode ? document.getElementById(this.id) : this.id;
         let veo = veoContainer.querySelector("video");
         let veoPoster = veoContainer.querySelector(".veo-poster");
         let veoPosterImg = veoContainer.querySelector(".veo-poster-img");
@@ -1725,4 +1741,4 @@ class VeoPlayer extends CreateVeoNode {
     }
 }
 
-export { VeoPlayer, VeoPlayer as default };
+export { VeoPlayer as default };
