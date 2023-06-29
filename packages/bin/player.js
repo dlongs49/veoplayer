@@ -1,5 +1,5 @@
 import { CreateVeoNode } from "./createVeoNode.js";
-import { formatTime,isDom,isPc } from "../utils/format.js";
+import { formatTime, isDom, isPc } from "../utils/format.js";
 
 export class VeoPlayer extends CreateVeoNode {
     durationTime = 1
@@ -9,15 +9,17 @@ export class VeoPlayer extends CreateVeoNode {
     isNode = true;
     constructor(arg) {
         let { id, poster, volume, style, plugins, islive, url, width, height, speed, autoplay, setting } = arg
-        
-        super(arg)
+        let w = width || 665
+        let h = height || 440
+        super({ ...arg, width: w, height: h })
+        this.height = h
+        this.width = w
         this.id = id;
         this.isNode = isDom(id)
         this.poster = poster || null
         this.url = url
         this.islive = islive
-        this.width = width
-        this.height = height
+
         this.speed = speed
         this.autoplay = autoplay
         this.volume = volume || 70
@@ -126,11 +128,11 @@ export class VeoPlayer extends CreateVeoNode {
                 this.#voeDownLoad()
             }
             if (veoSetting != null) {
+                this.#mouseInout(veoSetting, veoSettingOutcon, "opacity")
                 this.#handleVeoSetting()
             }
             if (veoCapture != null) {
                 this.#veoCapture();
-                this.#mouseInout(veoSetting, veoSettingOutcon, "opacity")
             }
         }
         this.#veoPlayPause();
@@ -645,8 +647,8 @@ export class VeoPlayer extends CreateVeoNode {
         const { veo, veoCapture } = this.#initNode()
         const canvas = document.createElement('canvas');
         veoCapture.addEventListener("click", (e) => {
-            canvas.width = this.width
-            canvas.height = this.height
+            canvas.width = veo.offsetWidth
+            canvas.height = veo.offsetHeight
             const ctx = canvas.getContext('2d')
             ctx.drawImage(veo, 0, 0);
             let url = canvas.toDataURL('image/png');

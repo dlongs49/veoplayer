@@ -9,7 +9,7 @@ import { volume, volume_mute } from '../svg_js/volume.js'
 import { full_screen, exit_full_screen } from '../svg_js/screen.js'
 import { formatVideo,isDom } from '../utils/format.js'
 import { paramsRules } from './paramsRules.js'
-// import "../style/style.css"
+import "../style/style.css"
 export class CreateVeoNode extends paramsRules {
     #PLAY_LABEL = "播放"
     #PAUSE_LABEL = "暂停"
@@ -32,8 +32,8 @@ export class CreateVeoNode extends paramsRules {
         this.url = url
         this.plugins = plugins || []
         this.islive = islive
-        this.width = width || 665
-        this.height = height || 440
+        this.width = width
+        this.height = height
         this.speed = speed || [2, 1.5, 1, 0.75, 0.5]
         this.autoplay = autoplay
         this.settings = settings || ["loop"]

@@ -28,7 +28,7 @@ export default {
         babel({
             exclude: "node_modules/**"
         }),
-        terser(),
+        // terser(),
         postcss({
             plugins: [
                 cssnext({ warnForDuplicates: false, }),
@@ -36,10 +36,10 @@ export default {
             extensions: [ '.css' ],
             // extract: 'css/index.css' 
         }),
-        strip(),
-        nodeResolve(),
+        // strip(),
+        // nodeResolve(),
         livereload(),
-        nodePolyfills(),
+        // nodePolyfills(),
         serve({
             port: 3000,
             openPage: '/index.html',

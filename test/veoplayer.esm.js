@@ -1071,11 +1071,11 @@ class VeoPlayer extends CreateVeoNode {
                 this.#voeDownLoad();
             }
             if (veoSetting != null) {
+                this.#mouseInout(veoSetting, veoSettingOutcon, "opacity");
                 this.#handleVeoSetting();
             }
             if (veoCapture != null) {
                 this.#veoCapture();
-                this.#mouseInout(veoSetting, veoSettingOutcon, "opacity");
             }
         }
         this.#veoPlayPause();
