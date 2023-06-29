@@ -20,7 +20,7 @@ export class VeoPlayer extends CreateVeoNode {
         this.poster = poster || null
         this.url = url
         this.islive = islive
-        this.bokeh = bokeh || {}
+        this.bokeh = bokeh
         this.speed = speed
         this.autoplay = autoplay
         this.volume = volume || 70
@@ -209,27 +209,25 @@ export class VeoPlayer extends CreateVeoNode {
      */
     #veoBgPicture() {
         const { veo, veoPosterImg } = this.#initNode()
-        let isBol = this.isBool(this.bokeh.url)
-        let isStr = this.isString(this.bokeh.url)
+        let isObj = this.isObject(this.bokeh)
+        let isStr = this.isString(this.bokeh)
         this.timer = null
-        let second = this.isNumber(this.bokeh.second)
-        if (isBol) {
-            if (this.bokeh.url === true) {
-                // 截取第一帧作为封面
-                this.timer = setTimeout(() => {
-                    let canvas = document.createElement('canvas')
-                    let width = veo.videoWidth
-                    let height = veo.videoWidth
-                    canvas.width = width
-                    canvas.height = height
-                    canvas.getContext('2d').drawImage(veo, 0, 0, width, height)
-                    let dataURL = canvas.toDataURL('image/png')
-                    veoPosterImg.src = dataURL
-                }, second ? this.bokeh.second * 1000 : 2000);
-            }
+        if (isObj) {
+            let seconds = this.isNumber(this.bokeh.seconds)
+            // 截取第一帧作为封面
+            this.timer = setTimeout(() => {
+                let canvas = document.createElement('canvas')
+                let width = veo.videoWidth
+                let height = veo.videoWidth
+                canvas.width = width
+                canvas.height = height
+                canvas.getContext('2d').drawImage(veo, 0, 0, width, height)
+                let dataURL = canvas.toDataURL('image/png')
+                veoPosterImg.src = dataURL
+            }, seconds ? this.bokeh.seconds * 1000 : 2000);
         }
         if (isStr) {
-            veoPosterImg.src = this.bokeh.url
+            veoPosterImg.src = this.bokeh
         }
     }
     /**

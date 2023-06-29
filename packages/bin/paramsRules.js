@@ -1,49 +1,52 @@
 export class paramsRules {
     constructor(arg) {
-        const { style,islive,url } = arg
+        const { style, islive, url } = arg
         this.style = style
         this.islive = islive || false
         this.url = url
         this.styleRulus()
     }
-    styleRulus(){
-        if(!this.style){
+    styleRulus() {
+        if (!this.style) {
             return []
         }
-        if(Object.prototype.toString.call(this.style) === '[object Object]'){
+        if (Object.prototype.toString.call(this.style) === '[object Object]') {
             let arr = []
-            Object.keys(this.style).map((v,i)=>{
+            Object.keys(this.style).map((v, i) => {
                 let value = Object.values(this.style)[i]
-                if(typeof value != 'string'){
+                if (typeof value != 'string') {
                     throw new Error(`${v}数据类型错误，期待数据类型值[string]`)
                 }
-                arr.push({key:v,value})
+                arr.push({ key: v, value })
             })
-           return arr
-           
-        }else{
+            return arr
+
+        } else {
             throw new Error(`[style]数据类型错误，期待数据类型值[object]`)
         }
     }
-    
-    isBool(params){
-        if(typeof params === 'boolean'){
+
+    isBool(params) {
+        if (typeof params === 'boolean') {
             return true
-        }else{
+        } else {
             return false
         }
     }
-    isString(params){
-       return typeof params === 'string' && Object.prototype.toString.call(params) === '[object String]' ? true : false
+    isString(params) {
+        return typeof params === 'string' && Object.prototype.toString.call(params) === '[object String]' ? true : false
     }
-    isNumber(params){
+    isNumber(params) {
         return Number.isInteger(params)
     }
-    urlRules(){
+    isObject(params) {
+       return Object.prototype.toString.call(params) === '[object Object]' ? true : false
+    }
+    urlRules() {
         let is = Object.prototype.toString.call(this.url)
-        if(is === '[object String]' || is === "[object Array]"){
+        if (is === '[object String]' || is === "[object Array]") {
             return is
-        }else{
+        } else {
             throw new Error(`[url]数据类型错误，期待数据类型值[String or Array]`)
         }
     }
