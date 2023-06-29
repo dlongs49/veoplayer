@@ -37,3 +37,19 @@ export const formatVideo = (params) => {
         return str
     }
 }
+/**
+ * 判断是否为 dom 节点
+ * @param {String}
+ * @returns boolean
+ */
+export const isDom = (dom) =>{
+    if(dom === null || dom === undefined){
+        throw new Error("元素不存在")
+    }
+    if (typeof dom === "string") {
+       return true
+    }
+    if (typeof dom === "object" && dom.nodeName === "string" && dom.nodeType === 1) {
+        return false
+    }
+}

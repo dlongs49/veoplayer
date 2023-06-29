@@ -7,9 +7,9 @@ import { setting } from '../svg_js/setting.js'
 import { capture } from '../svg_js/capture.js'
 import { volume, volume_mute } from '../svg_js/volume.js'
 import { full_screen, exit_full_screen } from '../svg_js/screen.js'
-import { formatVideo } from '../utils/format.js'
+import { formatVideo,isDom } from '../utils/format.js'
 import { paramsRules } from './paramsRules.js'
-import "../style/style.css"
+// import "../style/style.css"
 export class CreateVeoNode extends paramsRules {
     #PLAY_LABEL = "播放"
     #PAUSE_LABEL = "暂停"
@@ -44,7 +44,8 @@ export class CreateVeoNode extends paramsRules {
      * @returns ElementNode
      */
     getParentNode() {
-        return document.getElementById(this.idNode)
+        let isNode = isDom(this.idNode)
+        return isNode ? document.getElementById(this.idNode) : this.idNode
     }
 
     /**

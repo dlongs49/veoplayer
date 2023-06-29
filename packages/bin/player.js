@@ -1,19 +1,18 @@
 import { CreateVeoNode } from "./createVeoNode.js";
-import { formatTime } from "../utils/format.js";
+import { formatTime,isDom } from "../utils/format.js";
 
 export class VeoPlayer extends CreateVeoNode {
     durationTime = 1
     PERCENTILE = 100 // 百分比
     SLIDE_OFFSET = 0.8 // 提示滑块偏移量
     VOLUME_LEN = 100 // 音量总长
+    isNode = true;
     constructor(arg) {
         let { id, poster, volume, style, plugins, islive, url, width, height, speed, autoplay, setting } = arg
-        if (!document.getElementById(id)) {
-            throw new Error(id + " 元素不存在")
-        }
-
+        
         super(arg)
         this.id = id;
+        this.isNode = isDom(id)
         this.poster = poster || null
         this.url = url
         this.islive = islive
@@ -27,7 +26,7 @@ export class VeoPlayer extends CreateVeoNode {
     }
 
     #initNode() {
-        let veoContainer = document.getElementById(this.id);
+        let veoContainer = this.isNode ? document.getElementById(this.id) : this.id;
         let veo = veoContainer.querySelector("video");
         let veoPoster = veoContainer.querySelector(".veo-poster");
         let veoPosterImg = veoContainer.querySelector(".veo-poster-img");
