@@ -26,12 +26,18 @@ export class paramsRules {
         }
     }
     
-    isBool(){
-        if(typeof this.islive === 'boolean'){
+    isBool(params){
+        if(typeof params === 'boolean'){
             return true
         }else{
             return false
         }
+    }
+    isString(params){
+       return typeof params === 'string' && Object.prototype.toString.call(params) === '[object String]' ? true : false
+    }
+    isNumber(params){
+        return Number.isInteger(params)
     }
     urlRules(){
         let is = Object.prototype.toString.call(this.url)

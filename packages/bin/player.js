@@ -7,8 +7,9 @@ export class VeoPlayer extends CreateVeoNode {
     SLIDE_OFFSET = 0.8 // 提示滑块偏移量
     VOLUME_LEN = 100 // 音量总长
     isNode = true;
+    timer = null;
     constructor(arg) {
-        let { id, poster, volume, style, plugins, islive, url, width, height, speed, autoplay, setting } = arg
+        let { id, poster, volume, style, bokeh, plugins, islive, url, width, height, speed, autoplay, setting } = arg
         let w = width || 665
         let h = height || 440
         super({ ...arg, width: w, height: h })
@@ -19,7 +20,7 @@ export class VeoPlayer extends CreateVeoNode {
         this.poster = poster || null
         this.url = url
         this.islive = islive
-
+        this.bokeh = bokeh || {}
         this.speed = speed
         this.autoplay = autoplay
         this.volume = volume || 70
@@ -118,7 +119,7 @@ export class VeoPlayer extends CreateVeoNode {
         this.veoWaiting();
         this.veoError();
         this.veoPlaying();
-        if (!this.isBool()) {
+        if (!this.isBool(this.islive)) {
             this.#veoMouseTime();
             if (veoSpeed != null) {
                 this.#veoSpeedNode()
@@ -180,7 +181,7 @@ export class VeoPlayer extends CreateVeoNode {
 
             let duration = e.target.duration
             // Infinity 超出无穷大 或为 视频实时
-            if (this.isBool() === false && duration != Infinity) {
+            if (this.isBool(this.islive) === false && duration != Infinity) {
                 let spanNode = veoTimeTotal.querySelector("span")
                 let svgNode = veoTimeTotal.querySelectorAll("svg")
                 this.durationTime = duration
@@ -199,27 +200,38 @@ export class VeoPlayer extends CreateVeoNode {
                 this.#veoPlayPauseNode("pause")
             }
             this.veoTimeUpdate()
-
-
-            // 截取第一帧作为封面
-            setTimeout(() => {
-                let canvas = document.createElement('canvas')
-                let width = veo.offsetWidth
-                let height = veo.offsetHeight
-                canvas.width = width
-                canvas.height = height
-                canvas.getContext('2d').drawImage(veo, 0, 0, width, height)
-                let dataURL = canvas.toDataURL('image/png')
-                if (!this.poster) {
-                    this.poster = dataURL
-                }
-                this.#veoPoster()
-            }, 2000);
-
-
+            this.#veoPoster()
+            this.#veoBgPicture()
         })
     }
-
+    /**
+     * 背景虚化图
+     */
+    #veoBgPicture() {
+        const { veo, veoPosterImg } = this.#initNode()
+        let isBol = this.isBool(this.bokeh.url)
+        let isStr = this.isString(this.bokeh.url)
+        this.timer = null
+        let second = this.isNumber(this.bokeh.second)
+        if (isBol) {
+            if (this.bokeh.url === true) {
+                // 截取第一帧作为封面
+                this.timer = setTimeout(() => {
+                    let canvas = document.createElement('canvas')
+                    let width = veo.videoWidth
+                    let height = veo.videoWidth
+                    canvas.width = width
+                    canvas.height = height
+                    canvas.getContext('2d').drawImage(veo, 0, 0, width, height)
+                    let dataURL = canvas.toDataURL('image/png')
+                    veoPosterImg.src = dataURL
+                }, second ? this.bokeh.second * 1000 : 2000);
+            }
+        }
+        if (isStr) {
+            veoPosterImg.src = this.bokeh.url
+        }
+    }
     /**
      * 容器的滑入滑出
      */
@@ -251,12 +263,12 @@ export class VeoPlayer extends CreateVeoNode {
     }
 
     /**
-     * 视频封面背景
+     * 视频封面
      */
     #veoPoster() {
-        const { veoPosterImg } = this.#initNode()
+        const { veo } = this.#initNode()
         if (this.poster) {
-            veoPosterImg.src = this.poster
+            veo.poster = this.poster
         } else {
         }
     }
@@ -275,8 +287,8 @@ export class VeoPlayer extends CreateVeoNode {
             veoTimeSvgs[0].style.display = veoLoading.style.display = 'none';
             veoTimeSvgs[1].style.display = 'block'
             veoError.style.display = 'flex'
-            let { message } = e.target.error
-            veoErrorMsg.innerHTML = message
+            let msg = e.target.error ? e.target.error.message : "视频加载异常"
+            veoErrorMsg.innerHTML = msg
         })
         let veosource = veo.querySelector("source")
         if (veosource) {
@@ -647,8 +659,8 @@ export class VeoPlayer extends CreateVeoNode {
         const { veo, veoCapture } = this.#initNode()
         const canvas = document.createElement('canvas');
         veoCapture.addEventListener("click", (e) => {
-            const w = veo.videoWidth
-            const h = veo.videoHeight
+            const w = veo.videoWidth // 视频的真实宽度 即帧宽度
+            const h = veo.videoHeight// 视频的真实高度 即帧高度
             canvas.width = w
             canvas.height = h
             const ctx = canvas.getContext('2d')
