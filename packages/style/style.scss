@@ -72,7 +72,7 @@ $veo-process-size: 4px;
     position: relative;
     background-color: #000;
     --veo-color-primary: #fff;
-
+    -webkit-tap-highlight-color: transparent;
     .veo-video {
         @include wh;
         cursor: pointer;
