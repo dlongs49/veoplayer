@@ -1,5 +1,5 @@
 import { CreateVeoNode } from "./createVeoNode.js";
-import { formatTime,isDom } from "../utils/format.js";
+import { formatTime,isDom,isPc } from "../utils/format.js";
 
 export class VeoPlayer extends CreateVeoNode {
     durationTime = 1
@@ -735,7 +735,7 @@ export class VeoPlayer extends CreateVeoNode {
         let barBottom = 0
         const proHeight = veoVolumeProgress.offsetHeight
         const elemMove = (e) => {
-            const y = e.clientY
+            const y = isPc() ? e.clientY : e.touches[0].clientY
             let offset = (proHeight - (y - barY + barBottom))
             let by = (100 * offset) / proHeight
             if (by > -1 && by <= 100) {
@@ -752,14 +752,14 @@ export class VeoPlayer extends CreateVeoNode {
             }
         }
 
-
-        veoVolumeProgressBar.addEventListener("mousedown", (e) => {
-            barY = e.clientY
+        veoVolumeProgressBar.addEventListener(isPc() ? "mousedown" : "touchstart", (e) => {
+            console.log(e);
+            barY = isPc() ? e.clientY : e.touches[0].clientY
             barBottom = e.target.offsetTop
-            window.addEventListener("mousemove", elemMove)
+            window.addEventListener(isPc() ? "mousemove" : "touchmove", elemMove)
         })
-        window.addEventListener('mouseup', (e) => {
-            window.removeEventListener("mousemove", elemMove)
+        window.addEventListener(isPc() ? "mouseup" : "touchend", (e) => {
+            window.removeEventListener(isPc() ? "mousemove" : "touchmove", elemMove)
         })
 
     }

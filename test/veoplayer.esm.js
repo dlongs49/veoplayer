@@ -400,11 +400,11 @@ const formatTime = (params) => {
  * @example .mp4
  */
 const formatVideo = (params) => {
-    if(params === undefined || params === null || params === ""){
+    if (params === undefined || params === null || params === "") {
         return ""
     }
     let idx = params.lastIndexOf(".");
-    if (idx != -1){
+    if (idx != -1) {
         let str = params.slice(idx);
         return str
     }
@@ -414,15 +414,27 @@ const formatVideo = (params) => {
  * @param {String}
  * @returns boolean
  */
-const isDom = (dom) =>{
-    if(dom === null || dom === undefined){
+const isDom = (dom) => {
+    if (dom === null || dom === undefined) {
         throw new Error("元素不存在")
     }
     if (typeof dom === "string") {
-       return true
+        return true
     }
     if (typeof dom === "object" && dom.nodeName === "string" && dom.nodeType === 1) {
         return false
+    }
+};
+/***
+ * 判断移动端 PC端
+ * @param {null}
+ * @returns boolean
+ */
+const isPc = () => {
+    if (window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {
+        return false; // 移动端
+    } else {
+        return true; // PC端
     }
 };
 
@@ -1667,7 +1679,7 @@ class VeoPlayer extends CreateVeoNode {
         let barBottom = 0;
         const proHeight = veoVolumeProgress.offsetHeight;
         const elemMove = (e) => {
-            const y = e.clientY;
+            const y = isPc() ? e.clientY : e.touches[0].clientY;
             let offset = (proHeight - (y - barY + barBottom));
             let by = (100 * offset) / proHeight;
             if (by > -1 && by <= 100) {
@@ -1684,14 +1696,14 @@ class VeoPlayer extends CreateVeoNode {
             }
         };
 
-
-        veoVolumeProgressBar.addEventListener("mousedown", (e) => {
-            barY = e.clientY;
+        veoVolumeProgressBar.addEventListener(isPc() ? "mousedown" : "touchstart", (e) => {
+            console.log(e);
+            barY = isPc() ? e.clientY : e.touches[0].clientY;
             barBottom = e.target.offsetTop;
-            window.addEventListener("mousemove", elemMove);
+            window.addEventListener(isPc() ? "mousemove" : "touchmove", elemMove);
         });
-        window.addEventListener('mouseup', (e) => {
-            window.removeEventListener("mousemove", elemMove);
+        window.addEventListener(isPc() ? "mouseup" : "touchend", (e) => {
+            window.removeEventListener(isPc() ? "mousemove" : "touchmove", elemMove);
         });
 
     }

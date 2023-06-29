@@ -58,11 +58,13 @@ $veo-process-size: 4px;
         z-index: 3;
         pointer-events: none;
     }
-
-    &:hover {
-        &::after {
-            opacity: 1;
-            top: $hovTop;
+    // 判断支持hover 在移动端不支持hover
+    @media(any-hover:hover) {
+        &:hover {
+            &::after {
+                opacity: 1;
+                top: $hovTop;
+            }
         }
     }
 }
@@ -72,7 +74,8 @@ $veo-process-size: 4px;
     position: relative;
     background-color: #000;
     --veo-color-primary: #fff;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; // 解决移动端点击有背景颜色
+
     .veo-video {
         @include wh;
         cursor: pointer;
@@ -326,17 +329,19 @@ $veo-process-size: 4px;
                     width: 20px;
                     height: 20px;
                 }
-                .veo-speed-outcon,.veo-setting-outcon,
-                .veo-volume-outcon{
+
+                .veo-speed-outcon,
+                .veo-setting-outcon,
+                .veo-volume-outcon {
                     opacity: 0;
-                        position: absolute;
-                        z-index: 2;
-                        bottom: 20px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        padding-bottom: 20px;
-                        transition:  all .24s ease-out;
-                        visibility: hidden
+                    position: absolute;
+                    z-index: 2;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    padding-bottom: 20px;
+                    transition: all .24s ease-out;
+                    visibility: hidden
                 }
 
                 .veo-speed {
@@ -351,6 +356,7 @@ $veo-process-size: 4px;
                             color: #fff;
                         }
                     }
+
                     .veo-speed-incon {
                         padding: 10px 14px;
                         background: rgba(17, 17, 17, .7);
@@ -550,6 +556,7 @@ $veo-process-size: 4px;
                                 overflow: hidden;
                                 display: flex;
                                 justify-content: center;
+
                                 .veo-volume-progress-line {
                                     position: absolute;
                                     width: 3px;
@@ -665,6 +672,7 @@ $veo-process-size: 4px;
             animation: scaleFadeout .52s linear 1 normal forwards;
             pointer-events: none;
             z-index: 2;
+
             svg {
                 fill: rgba(255, 255, 255, 0.685);
             }
@@ -752,4 +760,3 @@ $veo-process-size: 4px;
     animation-duration: .3s;
     animation-iteration-count: 1;
 }
-

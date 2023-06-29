@@ -28,11 +28,11 @@ export const formatTime = (params) => {
  * @example .mp4
  */
 export const formatVideo = (params) => {
-    if(params === undefined || params === null || params === ""){
+    if (params === undefined || params === null || params === "") {
         return ""
     }
     let idx = params.lastIndexOf(".")
-    if (idx != -1){
+    if (idx != -1) {
         let str = params.slice(idx)
         return str
     }
@@ -42,14 +42,26 @@ export const formatVideo = (params) => {
  * @param {String}
  * @returns boolean
  */
-export const isDom = (dom) =>{
-    if(dom === null || dom === undefined){
+export const isDom = (dom) => {
+    if (dom === null || dom === undefined) {
         throw new Error("元素不存在")
     }
     if (typeof dom === "string") {
-       return true
+        return true
     }
     if (typeof dom === "object" && dom.nodeName === "string" && dom.nodeType === 1) {
         return false
+    }
+}
+/***
+ * 判断移动端 PC端
+ * @param {null}
+ * @returns boolean
+ */
+export const isPc = () => {
+    if (window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {
+        return false; // 移动端
+    } else {
+        return true; // PC端
     }
 }
