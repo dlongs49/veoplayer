@@ -647,8 +647,10 @@ export class VeoPlayer extends CreateVeoNode {
         const { veo, veoCapture } = this.#initNode()
         const canvas = document.createElement('canvas');
         veoCapture.addEventListener("click", (e) => {
-            canvas.width = veo.offsetWidth
-            canvas.height = veo.offsetHeight
+            const w = veo.videoWidth
+            const h = veo.videoHeight
+            canvas.width = w
+            canvas.height = h
             const ctx = canvas.getContext('2d')
             ctx.drawImage(veo, 0, 0);
             let url = canvas.toDataURL('image/png');

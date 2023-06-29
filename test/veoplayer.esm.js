@@ -506,8 +506,8 @@ class CreateVeoNode extends paramsRules {
         this.url = url;
         this.plugins = plugins || [];
         this.islive = islive;
-        this.width = width || 665;
-        this.height = height || 440;
+        this.width = width;
+        this.height = height;
         this.speed = speed || [2, 1.5, 1, 0.75, 0.5];
         this.autoplay = autoplay;
         this.settings = settings || ["loop"];
@@ -954,15 +954,17 @@ class VeoPlayer extends CreateVeoNode {
     isNode = true;
     constructor(arg) {
         let { id, poster, volume, style, plugins, islive, url, width, height, speed, autoplay, setting } = arg;
-        
-        super(arg);
+        let w = width || 665;
+        let h = height || 440;
+        super({ ...arg, width: w, height: h });
+        this.height = h;
+        this.width = w;
         this.id = id;
         this.isNode = isDom(id);
         this.poster = poster || null;
         this.url = url;
         this.islive = islive;
-        this.width = width;
-        this.height = height;
+
         this.speed = speed;
         this.autoplay = autoplay;
         this.volume = volume || 70;
@@ -1589,9 +1591,10 @@ class VeoPlayer extends CreateVeoNode {
         const { veo, veoCapture } = this.#initNode();
         const canvas = document.createElement('canvas');
         veoCapture.addEventListener("click", (e) => {
-            canvas.width = this.width;
-            canvas.height = this.height;
+            canvas.width = veo.offsetWidth;
+            canvas.height = veo.offsetHeight;
             const ctx = canvas.getContext('2d');
+            console.log(veo.offsetWidth + "px", veo.offsetHeight + "px",canvas);
             ctx.drawImage(veo, 0, 0);
             let url = canvas.toDataURL('image/png');
             let a = document.createElement("a");
