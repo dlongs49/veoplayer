@@ -139,7 +139,12 @@ export class CreateVeoNode extends paramsRules {
         veoError.innerHTML = error_close
         const veoErrorMsg = document.createElement("span")
         veoErrorMsg.setAttribute("class", "veo-error-msg")
+        const veoRefresh = document.createElement("a")
+        veoRefresh.setAttribute("class", "veo-refresh")
+        veoRefresh.setAttribute("href", "javascript:void(0)")
         veoError.appendChild(veoErrorMsg)
+        veoError.appendChild(veoRefresh)
+        veoRefresh.innerHTML = "刷新"
     }
     /**
      * 创建 【加载】 节点
@@ -323,8 +328,9 @@ export class CreateVeoNode extends paramsRules {
     * 待定
     */
     #createCenterNode() { }
+
     /**
-     * 创建 【倍速播放】节点 
+     * 创建 【倍速播放】节点
      */
     #createSpeedNode() {
         const { VEO_RIGHT_CONTROL_NODE } = this.#getLeftCnterRightNode()
@@ -462,7 +468,7 @@ export class CreateVeoNode extends paramsRules {
      * 创建 【全屏 & 退出全屏】节点
      */
     #createFullScreenNode() {
-        const { VEO_RIGHT_CONTROL_NODE } = this.#getLeftCnterRightNode()
+        const {VEO_RIGHT_CONTROL_NODE} = this.#getLeftCnterRightNode()
         const veoScreen = document.createElement("div")
         veoScreen.setAttribute("class", "veo-screen")
         veoScreen.setAttribute("label", this.#FULL_SCREEN_LABEL)
@@ -470,4 +476,4 @@ export class CreateVeoNode extends paramsRules {
         veoScreen.innerHTML = full_screen + exit_full_screen
         VEO_RIGHT_CONTROL_NODE.appendChild(veoScreen)
     }
-};
+}

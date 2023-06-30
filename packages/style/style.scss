@@ -118,11 +118,23 @@ $veo-process-size: 4px;
         transform: translateX(-50%);
         align-items: center;
         justify-items: center;
+        z-index: 3;
 
         span {
             margin-left: 4px;
             color: rgba(255, 255, 255, .7);
             font-size: 14px;
+        }
+
+        .veo-refresh {
+            margin-left: 5px;
+            color: var(--veo-color-primary);
+            font-size: 13px;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
         }
     }
 
