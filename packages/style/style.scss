@@ -75,6 +75,7 @@ $veo-process-size: 4px;
   background-color: #000;
   --veo-color-primary: #fff;
   -webkit-tap-highlight-color: transparent; // 解决移动端点击有背景颜色
+  user-select: none;
 
   .veo-video {
     @include wh;
@@ -148,6 +149,7 @@ $veo-process-size: 4px;
       color: rgba(255, 255, 255, .3);
       font-size: 12px;
       margin-top: 6px;
+      user-select: all;
     }
 
   }

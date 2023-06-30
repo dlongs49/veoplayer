@@ -44,7 +44,8 @@ export class VeoPlayer extends CreateVeoNode {
         let veoTimeTotal = veoContainer.querySelector(".veo-time-total")
         let veoTimeSvgs = veoContainer.querySelectorAll(".veo-time-total svg")
         let veoErrorMsg = veoContainer.querySelector(".veo-error-msg")
-        let veoError = veoContainer.querySelector(".veo-error")
+        let veoRefreshOn = veoContainer.querySelector(".veo-refresh-on")
+        let veoErrorEl = veoContainer.querySelector(".veo-error")
         let veoVideo = veoContainer.querySelector(".veo-video")
         let veoLoading = veoContainer.querySelector(".veo-loading")
         let veoTimeIng = veoContainer.querySelector(".veo-time-ing")
@@ -86,7 +87,8 @@ export class VeoPlayer extends CreateVeoNode {
             veoTimeTotal,
             veoTimeSvgs,
             veoErrorMsg,
-            veoError,
+            veoRefreshOn,
+            veoErrorEl,
             veoLoading,
             veoTimeIng,
             veoPlayPause,
@@ -118,6 +120,7 @@ export class VeoPlayer extends CreateVeoNode {
             veoDownload,
             veoCapture,
             veoSpeedCon,
+            veoLoading,
             veoSetting,
             veoSettingOutcon,
             veoVolume,
@@ -156,6 +159,7 @@ export class VeoPlayer extends CreateVeoNode {
         this.#veoVolume()
 
         this.#mouseInout(veoVolume, veoVolumeOutcon, "opacity")
+        this.veoRefresh()
     }
 
     /**
@@ -165,13 +169,16 @@ export class VeoPlayer extends CreateVeoNode {
     veoLoadStart(callback) {
         let {
             veo,
+            veoErrorEl,
+            veoTimeSvgs,
             veoLoading
         } = this.#initNode()
+        veoTimeSvgs[0].style.display = veoLoading.style.display = "block"
+        veoTimeSvgs[1].style.display = "none"
         veo.addEventListener('loadstart', (e) => {
             if (callback) {
                 callback(e)
             }
-            veoLoading.style.display = 'block'
             this.#voeInitVolume('init')
         })
     }
@@ -291,18 +298,18 @@ export class VeoPlayer extends CreateVeoNode {
      * 视频加载错误
      */
     async veoError(callback) {
-        let {veoError, veo, veoErrorMsg, veoTimeSvgs, veoLoading} = this.#initNode()
+        let {veoErrorEl, veo, veoErrorMsg, veoTimeSvgs, veoLoading} = this.#initNode()
         const setError = (errTxt) => {
             veoTimeSvgs[0].style.display = veoLoading.style.display = 'none';
             veoTimeSvgs[1].style.display = 'block'
-            veoError.style.display = 'flex'
+            veoErrorEl.style.display = 'flex'
             veoErrorMsg.innerHTML = errTxt
 
         }
-
-
         const suffix = formatVideo(this.url)
+
         if (suffix === ".m3u8") {
+            // [1231] 有 bug，待优化
             const res = await this.fetchPromise(this.url)
             if (res.ok !== true) {
                 setError(`[${res.status}：${res.statusText}]`)
@@ -311,6 +318,7 @@ export class VeoPlayer extends CreateVeoNode {
                 }
             }
         }
+
         veo.addEventListener("error", (e) => {
             if (callback) {
                 e.video_type = "video"
@@ -322,6 +330,7 @@ export class VeoPlayer extends CreateVeoNode {
         let veosource = veo.querySelector("source")
         if (veosource) {
             veosource.addEventListener("error", (event) => {
+                console.log(event)
                 if (callback) {
                     event.video_type = "source"
                     callback(event)
@@ -340,6 +349,29 @@ export class VeoPlayer extends CreateVeoNode {
                 resolve(err)
             })
         })
+    }
+
+    /**
+     * 重新加载
+     */
+    veoRefresh(callback) {
+        let {veoErrorEl, veoRefreshOn, veo} = this.#initNode()
+
+        const refreshOnM = (e) => {
+            if (callback) {
+                callback(e)
+            }
+            const suffix = formatVideo(this.url)
+            if (suffix === ".m3u8") {
+                // [1231] 临时替代
+                window.location.reload();
+            } else {
+                veo.load()
+            }
+            veoErrorEl.style.display = "none"
+            this.#initPlayer()
+        }
+        veoRefreshOn.addEventListener("click", refreshOnM)
     }
 
     /**

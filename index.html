@@ -43,7 +43,7 @@
         poster: "",
         // width: 665,
         // height: 440,
-        islive: true,
+        // islive: true,
         style: {
             // themeColor: "#ff011e",
         },
@@ -56,7 +56,7 @@
 
     let player = new VeoPlayer({
         id: "test1",
-        url: "https://wave.video/embed/649c405b5643bb14d8e353f2/649c405b5643bb14d8e353f00.mp4",
+        url: "https://wave.video/embed/649c405b5643bb14d8e353f2/649c409834723d0cb056053c0.mp4",
         width: 665,
         height: 440,
         style: {
@@ -101,9 +101,9 @@
         console.log("暂停播放", e);
     })
     // 视频播放加载异常
-    player.veoError((e) => {
-        console.log("视频播放加载异常", e);
-    })
+    // player.veoError((e) => {
+    //     console.log("视频播放加载异常", e);
+    // })
     // 加载中
     player.veoWaiting((e) => {
         console.log("加载中", e);
