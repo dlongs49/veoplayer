@@ -286,7 +286,7 @@ export class VeoPlayer extends CreateVeoNode {
             veoTimeSvgs[1].style.display = 'block'
             veoError.style.display = 'flex'
             let msg = e.target.error ? e.target.error.message : "视频加载异常"
-            veoErrorMsg.innerHTML = msg
+            veoErrorMsg.innerHTML = `[${msg}]`
         })
         let veosource = veo.querySelector("source")
         if (veosource) {
@@ -298,7 +298,7 @@ export class VeoPlayer extends CreateVeoNode {
                 veoTimeSvgs[0].style.display = veoLoading.style.display = 'none';
                 veoTimeSvgs[1].style.display = 'block'
                 veoError.style.display = 'flex'
-                veoErrorMsg.innerHTML = "视频加载失败"
+                veoErrorMsg.innerHTML = "[视频加载失败]"
             })
         }
 

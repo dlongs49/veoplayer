@@ -40,26 +40,36 @@
 .veo-container .veo-error {
   display: none;
   position: absolute;
-  top: 30px;
   left: 50%;
-  transform: translateX(-50%);
+  top: 45%;
+  transform: translate(-50%, -50%);
   align-items: center;
   justify-items: center;
+  flex-direction: column;
   z-index: 3;
 }
-.veo-container .veo-error span {
+.veo-container .veo-error .veo-refresh-con {
+  display: flex;
+  align-items: center;
+}
+.veo-container .veo-error .veo-refresh-con span {
   margin-left: 4px;
   color: rgba(255, 255, 255, 0.7);
   font-size: 14px;
 }
-.veo-container .veo-error .veo-refresh {
+.veo-container .veo-error .veo-refresh-con .veo-refresh-on {
   margin-left: 5px;
   color: var(--veo-color-primary);
   font-size: 13px;
   text-decoration: none;
 }
-.veo-container .veo-error .veo-refresh:hover {
+.veo-container .veo-error .veo-refresh-con .veo-refresh-on:hover {
   text-decoration: underline;
+}
+.veo-container .veo-error .veo-error-msg {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 12px;
+  margin-top: 6px;
 }
 .veo-container .veo-loading {
   display: none;

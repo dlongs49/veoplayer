@@ -136,15 +136,22 @@ export class CreateVeoNode extends paramsRules {
         const veoError = document.createElement("div")
         veoError.setAttribute("class", "veo-error")
         parentNode.appendChild(veoError)
-        veoError.innerHTML = error_close
+        // veoError.innerHTML = error_close
         const veoErrorMsg = document.createElement("span")
         veoErrorMsg.setAttribute("class", "veo-error-msg")
-        const veoRefresh = document.createElement("a")
-        veoRefresh.setAttribute("class", "veo-refresh")
-        veoRefresh.setAttribute("href", "javascript:void(0)")
+        const veoRefreshCon = document.createElement("div")
+        veoRefreshCon.setAttribute("class", "veo-refresh-con")
+        veoError.appendChild(veoRefreshCon)
+        const veoRefreshMsg = document.createElement("span")
+        veoRefreshMsg.setAttribute("class", "veo-refresh-msg")
+        veoRefreshCon.appendChild(veoRefreshMsg)
+        veoRefreshMsg.innerHTML = "加载异常,"
+        const veoRefreshOn = document.createElement("a")
+        veoRefreshOn.setAttribute("class", "veo-refresh-on")
+        veoRefreshCon.appendChild(veoRefreshOn)
+        veoRefreshOn.innerHTML = "刷新"
+        veoRefreshOn.setAttribute("href", "javascript:void(0)")
         veoError.appendChild(veoErrorMsg)
-        veoError.appendChild(veoRefresh)
-        veoRefresh.innerHTML = "刷新"
     }
     /**
      * 创建 【加载】 节点
