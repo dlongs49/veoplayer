@@ -136,7 +136,6 @@ export class CreateVeoNode extends paramsRules {
         const veoError = document.createElement("div")
         veoError.setAttribute("class", "veo-error")
         parentNode.appendChild(veoError)
-        // veoError.innerHTML = error_close
         const veoErrorMsg = document.createElement("span")
         veoErrorMsg.setAttribute("class", "veo-error-msg")
         const veoRefreshCon = document.createElement("div")
