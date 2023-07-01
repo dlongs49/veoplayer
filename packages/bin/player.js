@@ -8,8 +8,9 @@ export class VeoPlayer extends CreateVeoNode {
     durationTime = 1
     isNode = true;
     isError = false
+    errorText = ""
     durationFormatTime = null
-
+    isFullScreen = 1
     constructor(arg) {
         let {
             id,
@@ -313,7 +314,7 @@ export class VeoPlayer extends CreateVeoNode {
         if (data) {
             veoTimeSvgs[0].style.display = veoLoading.style.display = 'none';
             veoTimeSvgs[1].style.display = veoErrorEl.style.display = 'flex'
-            veoErrorMsg.innerHTML = data
+            veoErrorMsg.innerHTML = this.errorText = data
             this.isError = true
         } else {
             veoTimeSvgs[0].style.display = veoLoading.style.display = 'flex';
@@ -851,7 +852,7 @@ export class VeoPlayer extends CreateVeoNode {
         const volumeHeight = veoVolumeProgress.offsetHeight
         let height = 0
         let volumeNum = 0
-        if (type == 'init') {
+        if (type === 'init') {
             volumeNum = this.volume / this.#VOLUME_LEN
             height = ((volumeHeight * this.volume) / this.#VOLUME_LEN) / volumeHeight * 100
         } else {
@@ -918,11 +919,11 @@ export class VeoPlayer extends CreateVeoNode {
                 // setTimeout(() => {
                 //     veoContainer.classList.remove("veo-control-isshow")
                 // }, 2000);
-                veoScreen.dataset.index = 0
+                veoScreen.dataset.index = this.isFullScreen = 0
                 veoScreen.setAttribute("label", "退出")
             } else {
                 document.exitFullscreen()
-                veoScreen.dataset.index = 1
+                veoScreen.dataset.index = this.isFullScreen = 1
                 veoScreen.setAttribute("label", "全屏")
             }
         }
