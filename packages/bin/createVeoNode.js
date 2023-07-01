@@ -36,7 +36,7 @@ export class CreateVeoNode extends paramsRules {
         this.width = width
         this.anonymous = anonymous || false
         this.height = height
-        this.speed = speed || [2, 1.5, 1, 0.75, 0.5]
+        this.speed = speed
         this.autoplay = autoplay
         this.setting = setting || ["loop"]
         this.#createParentNode()

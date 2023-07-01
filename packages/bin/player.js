@@ -31,7 +31,8 @@ export class VeoPlayer extends CreateVeoNode {
         } = arg
         let w = width || 665
         let h = height || 440
-        super({...arg, width: w, height: h})
+        let defaultSpeed = speed || [2, 1.5, 1, 0.75, 0.5]
+        super({...arg, width: w, height: h, speed: defaultSpeed})
         this.height = h
         this.width = w
         this.id = id;
@@ -41,12 +42,11 @@ export class VeoPlayer extends CreateVeoNode {
         this.islive = islive || false
         this.muted = muted || false
         this.bokeh = bokeh
-        this.speed = speed
+        this.speed = speed || defaultSpeed
         this.autoplay = autoplay || false
         this.volume = volume || 70
         this.initNode()
         this.initPlayer()
-        this.veoIsMuted(this.muted)
     }
 
     initNode() {
@@ -181,6 +181,7 @@ export class VeoPlayer extends CreateVeoNode {
         this.veoScreen()
         this.veoKeyCode();
         if (isPc()) {
+            this.veoIsMuted(this.muted)
             this.veoVolume()
             this.mouseInout(veoVolume, veoVolumeOutcon, "opacity")
         }
@@ -469,7 +470,6 @@ export class VeoPlayer extends CreateVeoNode {
         let {veoContainer, veo, veoBuff} = this.initNode()
         veo.addEventListener("progress", (e) => {
             let hc = e.target.buffered.end(0)
-            console.log(hc)
             if (callback) {
                 callback(e)
             }
@@ -709,6 +709,7 @@ export class VeoPlayer extends CreateVeoNode {
      */
     veoSpeedNode() {
         const {veo, veoSpeedItemNode} = this.initNode()
+        console.log(veoSpeedItemNode)
         for (let i = 0; i < veoSpeedItemNode.length; i++) {
             veoSpeedItemNode[i].addEventListener("click", (e) => {
                 for (let idx in veoSpeedItemNode) {
@@ -911,7 +912,6 @@ export class VeoPlayer extends CreateVeoNode {
         }
 
         veoVolumeProgressBar.addEventListener(isPc() ? "mousedown" : "touchstart", (e) => {
-            console.log(e);
             barY = isPc() ? e.clientY : e.touches[0].clientY
             barBottom = e.target.offsetTop
             window.addEventListener(isPc() ? "mousemove" : "touchmove", elemMove)
