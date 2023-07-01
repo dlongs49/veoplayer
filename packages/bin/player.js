@@ -925,11 +925,10 @@ export class VeoPlayer extends CreateVeoNode {
     /**
      * 全屏
      */
-    veoScreen() {
+    veoScreen(params) {
         const {veoContainer, veoScreen} = this.initNode()
-        const screenFunc = (e) => {
-            let isFullScreen = document.fullscreenElement
-            if (!isFullScreen) {
+        const screenFunc = (data) => {
+            if (data) {
                 veoContainer.requestFullscreen()
                 // setTimeout(() => {
                 //     veoContainer.classList.remove("veo-control-isshow")
@@ -942,11 +941,16 @@ export class VeoPlayer extends CreateVeoNode {
                 veoScreen.setAttribute("label", "全屏")
             }
         }
+        if (params != null && params !== undefined) {
+            screenFunc(params)
+        }
         veoScreen.addEventListener("click", (e) => {
-            screenFunc(e)
+            let isfull = document.fullscreenElement
+            screenFunc(!isfull)
         })
         veoContainer.addEventListener("dblclick", (e) => {
-            screenFunc(veoScreen)
+            let isfull = document.fullscreenElement
+            screenFunc(!isfull)
             this.veoPlayPauseNode("play")
         })
     }

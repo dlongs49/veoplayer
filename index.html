@@ -27,12 +27,13 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.0/hls.min.js"></script>
 
 <body>
-    <div id="test"></div>
-    <div id="test1" style="margin-top: 20px;"></div>
-    <video id="videoMedia"></video>
+<div id="test"></div>
+<div id="test1" style="margin-top: 20px;"></div>
+<video id="videoMedia"></video>
+<button id="bbtn">点击</button>
 </body>
 <script type="module">
-    import  VeoPlayer  from './dist/veoplayer.esm.min.js'
+    import VeoPlayer from './dist/veoplayer.esm.min.js'
     import {play} from "./packages/svg_js/play_pause.js";
     // import VeoPlayer from './test/veoplayer.esm.js'
 
@@ -116,8 +117,9 @@
     player.veoPlaying((e) => {
         console.log("播放中", e);
     });
-
-
+    document.querySelector("#bbtn").onclick = () => {
+        player.veoScreen(true)
+    }
 </script>
 
 <script>
