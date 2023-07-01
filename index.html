@@ -36,7 +36,7 @@
     import {play} from "./packages/svg_js/play_pause.js";
     // import VeoPlayer from './test/veoplayer.esm.js'
 
-    let mPlayer = new VeoPlayer({
+    let mplayer = new VeoPlayer({
         // id: "test",
         id: document.querySelector("#test"),
         url: "https://s.xlzys.com/play/RdGQ2yaD/index.m3u8",
@@ -52,7 +52,7 @@
         // autoplay: true,
         speed: [2, 1.5, 1, 0.75],
         setting: ["loop", "pip"],
-        // plugins:["speed","download","setting","capture"]
+        plugins: ["speed", "download", "setting", "capture"]
     })
 
     let player = new VeoPlayer({
@@ -73,8 +73,7 @@
         setting: ["loop", "pip"],
         plugins: ["speed", "download", "setting", "capture"]
     })
-    console.log(player)
-    /**
+
     // 视频预加载
     player.veoLoadStart((e) => {
         console.log("视频预加载", e);
@@ -116,7 +115,7 @@
         console.log("播放中", e);
     });
 
-     **/
+
 </script>
 
 <script>

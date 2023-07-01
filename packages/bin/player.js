@@ -1,5 +1,5 @@
 import {CreateVeoNode} from "./createVeoNode.js";
-import {formatTime, isDom, isPc, formatVideo} from "../utils/format.js";
+import {formatTime, formatVideo, isDom, isPc} from "../utils/format.js";
 
 export class VeoPlayer extends CreateVeoNode {
     durationTime = 1
@@ -9,6 +9,7 @@ export class VeoPlayer extends CreateVeoNode {
     isNode = true;
     timer = null;
     isError = false
+
     constructor(arg) {
         let {id, poster, volume, style, bokeh, plugins, islive, url, width, height, speed, autoplay, setting} = arg
         let w = width || 665
@@ -282,20 +283,21 @@ export class VeoPlayer extends CreateVeoNode {
     }
 
     /**
-     * 加载
+     * 加载交互
      */
-    loadAndError(data){
+    loadAndError(data) {
         let {veoErrorEl, veo, veoErrorMsg, veoTimeSvgs, veoLoading} = this.initNode()
-        if(data){
+        if (data) {
             veoTimeSvgs[0].style.display = veoLoading.style.display = 'none';
             veoTimeSvgs[1].style.display = veoErrorEl.style.display = 'flex'
             veoErrorMsg.innerHTML = data
             this.isError = true
-        }else{
+        } else {
             veoTimeSvgs[0].style.display = veoLoading.style.display = 'flex';
             veoTimeSvgs[1].style.display = veoErrorEl.style.display = 'none'
         }
     }
+
     /**
      * 视频封面
      */
@@ -312,9 +314,15 @@ export class VeoPlayer extends CreateVeoNode {
      * 视频加载错误
      */
     async veoError(callback) {
-        let {veoErrorEl, veo, veoErrorMsg, veoTimeSvgs, veoLoading} = this.initNode()
+        let {veo} = this.initNode()
         const suffix = formatVideo(this.url)
-        await  this.loadM3u8();
+        if (suffix === ".m3u8") {
+            const res = await this.loadM3u8();
+            if (callback) {
+                callback(res)
+            }
+            return
+        }
         veo.addEventListener("error", (e) => {
             if (callback) {
                 e.video_type = "video"
@@ -325,7 +333,7 @@ export class VeoPlayer extends CreateVeoNode {
         })
         let veosource = veo.querySelector("source")
         if (veosource) {
-            veosource.addEventListener("error", (event)=>{
+            veosource.addEventListener("error", (event) => {
                 if (callback) {
                     event.video_type = "source"
                     callback(event)
@@ -351,19 +359,15 @@ export class VeoPlayer extends CreateVeoNode {
      * 加载失败 重新请求 m3u8 文件
      * @returns {Promise<boolean>}
      */
-    async loadM3u8(){
-        const suffix = formatVideo(this.url)
-        if (suffix === ".m3u8") {
-            this.veoLoaded()
-            const res = await this.fetchPromise(this.url)
-            if (res.ok !== true) {
-                this.loadAndError(`[${res.status}：${res.statusText}]`)
-            }
-            return true
-        }else{
-            return false
+    async loadM3u8() {
+        this.veoLoaded()
+        const res = await this.fetchPromise(this.url)
+        if (res.ok !== true) {
+            this.loadAndError(`[${res.status}：${res.statusText}]`)
         }
+        return res
     }
+
     /**
      * 重新加载
      */
@@ -371,14 +375,21 @@ export class VeoPlayer extends CreateVeoNode {
         let {veoRefreshOn, veo} = this.initNode()
 
         const refreshOnM = async (e) => {
+
+            const suffix = formatVideo(this.url)
+            if (suffix === ".m3u8") {
+                const res = await this.loadM3u8()
+                if (callback) {
+                    callback(res)
+                }
+                return
+            }
+
             if (callback) {
                 callback(e)
             }
-            const flag = await this.loadM3u8()
-            if(!flag){
-                veo.load()
-                this.veoLoaded()
-            }
+            veo.load()
+            this.veoLoaded()
         }
         veoRefreshOn.addEventListener("click", refreshOnM)
     }
@@ -678,7 +689,17 @@ export class VeoPlayer extends CreateVeoNode {
     voeDownLoad() {
         const {veoDownload, veo} = this.initNode()
         veoDownload.addEventListener("click", (e) => {
-
+            fetch(this.url)
+                .then(res => res.blob())
+                .then(blob => {
+                    const a = document.createElement("a");
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    a.download = new Date().getTime();
+                    a.href = blobUrl;
+                    a.click();
+                    window.URL.revokeObjectURL(blobUrl);
+                    a.remove();
+                })
         })
     }
 
