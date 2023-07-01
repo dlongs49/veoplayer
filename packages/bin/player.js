@@ -156,10 +156,10 @@ export class VeoPlayer extends CreateVeoNode {
         this.veoPlayEnded();
         this.veoScreen()
         this.veoKeyCode();
-
-        this.veoVolume()
-
-        this.mouseInout(veoVolume, veoVolumeOutcon, "opacity")
+        if (isPc()) {
+            this.veoVolume()
+            this.mouseInout(veoVolume, veoVolumeOutcon, "opacity")
+        }
         this.veoRefresh()
     }
 
@@ -169,16 +169,15 @@ export class VeoPlayer extends CreateVeoNode {
      */
     veoLoadStart(callback) {
         let {
-            veo,
-            veoErrorEl,
-            veoTimeSvgs,
-            veoLoading
+            veo
         } = this.initNode()
         veo.addEventListener('loadstart', (e) => {
             if (callback) {
                 callback(e)
             }
-            this.voeInitVolume('init')
+            if (isPc()) {
+                this.voeInitVolume('init')
+            }
         })
     }
 

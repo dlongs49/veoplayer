@@ -1,15 +1,16 @@
-import { error_close, error_time } from '../svg_js/error_close.js'
-import { veo_loading, time_loading } from '../svg_js/loading.js'
-import { play, pause, play_mutual, pause_mutual } from '../svg_js/play_pause.js'
-import { strike } from '../svg_js/strike.js'
-import { download } from '../svg_js/download.js'
-import { setting } from '../svg_js/setting.js'
-import { capture } from '../svg_js/capture.js'
-import { volume, volume_mute } from '../svg_js/volume.js'
-import { full_screen, exit_full_screen } from '../svg_js/screen.js'
-import { formatVideo,isDom } from '../utils/format.js'
-import { paramsRules } from './paramsRules.js'
+import {error_time} from '../svg_js/error_close.js'
+import {time_loading, veo_loading} from '../svg_js/loading.js'
+import {pause, pause_mutual, play, play_mutual} from '../svg_js/play_pause.js'
+import {strike} from '../svg_js/strike.js'
+import {download} from '../svg_js/download.js'
+import {setting} from '../svg_js/setting.js'
+import {capture} from '../svg_js/capture.js'
+import {volume, volume_mute} from '../svg_js/volume.js'
+import {exit_full_screen, full_screen} from '../svg_js/screen.js'
+import {formatVideo, isDom, isPc} from '../utils/format.js'
+import {paramsRules} from './paramsRules.js'
 import "../style/style.css"
+
 export class CreateVeoNode extends paramsRules {
     #PLAY_LABEL = "播放"
     #PAUSE_LABEL = "暂停"
@@ -262,15 +263,17 @@ export class CreateVeoNode extends paramsRules {
                 if(item === "download") {
                     this.#createDownloadNode();
                 }
-                if(item === "setting"){
+                if (item === "setting") {
                     this.#createSettingNode()
                 }
-                if(item === "capture"){
+                if (item === "capture") {
                     this.#createCameraNode()
                 }
             }
         }
-        this.#createVolumeNode();
+        if (isPc()) {
+            this.#createVolumeNode();
+        }
         this.#createFullScreenNode()
     }
     /**
