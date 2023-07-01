@@ -18,6 +18,7 @@ export class VeoPlayer extends CreateVeoNode {
             volume,
             style,
             muted,
+            anonymous,
             bokeh,
             plugins,
             islive,
@@ -194,6 +195,8 @@ export class VeoPlayer extends CreateVeoNode {
         let {
             veo
         } = this.initNode()
+
+
         veo.addEventListener('loadstart', (e) => {
             if (callback) {
                 callback(e)
@@ -219,7 +222,8 @@ export class VeoPlayer extends CreateVeoNode {
             if (callback) {
                 callback(e)
             }
-
+            this.networkState = veo.networkState
+            this.readyState = veo.readyState
             let duration = e.target.duration
             // Infinity 超出无穷大 或为 视频实时
             if (this.islive === false && duration !== Infinity) {
@@ -227,7 +231,6 @@ export class VeoPlayer extends CreateVeoNode {
                 let svgNode = veoTimeTotal.querySelectorAll("svg")
                 this.durationTime = duration
                 let time = formatTime(duration)
-                console.log(time)
                 this.durationFormatTime = time
                 svgNode[0].style.display = svgNode[1].style.display = veoLoading.style.display = 'none';
                 spanNode.innerHTML = time

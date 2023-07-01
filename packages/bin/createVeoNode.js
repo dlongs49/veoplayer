@@ -26,7 +26,7 @@ export class CreateVeoNode extends paramsRules {
     #VOLUME_MUTE_LABEL = "静音"
     #VIDEO_FORMAT_LIST = [".m3u8", ".mp4", ".webm"]
     constructor(arg) {
-        let {id, style, url, width, plugins, islive, height, speed, autoplay, setting} = arg
+        let {id, style, url, width, anonymous, plugins, islive, height, speed, autoplay, setting} = arg
         super(arg)
         this.id = id
         this.style = style
@@ -34,6 +34,7 @@ export class CreateVeoNode extends paramsRules {
         this.plugins = plugins || []
         this.islive = islive
         this.width = width
+        this.anonymous = anonymous || false
         this.height = height
         this.speed = speed || [2, 1.5, 1, 0.75, 0.5]
         this.autoplay = autoplay
@@ -108,7 +109,9 @@ export class CreateVeoNode extends paramsRules {
                 sourceaAdd(i)
             }
         }
-        video.setAttribute("crossorigin", "anonymous")
+        if (this.anonymous) {
+            video.setAttribute("crossorigin", "anonymous")
+        }
         veoVideo.appendChild(video)
         this.getVideo = this.getVideo()
     }
