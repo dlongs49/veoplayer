@@ -198,7 +198,11 @@ export class VeoPlayer extends CreateVeoNode {
 
 
         veo.addEventListener('loadstart', (e) => {
+            this.networkState = veo.networkState
+            this.readyState = veo.readyState
             if (callback) {
+                e.networkState = veo.networkState
+                e.readyState = veo.readyState
                 callback(e)
             }
             if (isPc()) {
@@ -346,12 +350,16 @@ export class VeoPlayer extends CreateVeoNode {
         const suffix = formatVideo(this.url)
         if (suffix === ".m3u8") {
             const res = await this.loadM3u8();
+            this.networkState = veo.networkState
+            this.readyState = veo.readyState
             if (callback) {
                 callback(res)
             }
             return
         }
         veo.addEventListener("error", (e) => {
+            this.readyState = veo.readyState
+            this.networkState = veo.networkState
             if (callback) {
                 e.video_type = "video"
                 callback(e)
@@ -362,6 +370,8 @@ export class VeoPlayer extends CreateVeoNode {
         let veosource = veo.querySelector("source")
         if (veosource) {
             veosource.addEventListener("error", (event) => {
+                this.readyState = veo.readyState
+                this.networkState = veo.networkState
                 if (callback) {
                     event.video_type = "source"
                     callback(event)
@@ -390,6 +400,7 @@ export class VeoPlayer extends CreateVeoNode {
     async loadM3u8() {
         this.veoLoaded()
         const res = await this.fetchPromise(this.url)
+
         if (res.ok !== true) {
             this.loadAndError(`[${res.status}：${res.statusText}]`)
         }
@@ -458,6 +469,7 @@ export class VeoPlayer extends CreateVeoNode {
         let {veoContainer, veo, veoBuff} = this.initNode()
         veo.addEventListener("progress", (e) => {
             let hc = e.target.buffered.end(0)
+            console.log(hc)
             if (callback) {
                 callback(e)
             }

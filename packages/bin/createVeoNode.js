@@ -55,6 +55,7 @@ export class CreateVeoNode extends paramsRules {
      */
     #createParentNode() {
         const parentNode = this.getParentNode()
+        this.rootNode = parentNode
         this.styleArr = this.styleRulus()
         this.styleArr.map(v => {
             if (v.key === "themeColor") {
@@ -113,7 +114,7 @@ export class CreateVeoNode extends paramsRules {
             video.setAttribute("crossorigin", "anonymous")
         }
         veoVideo.appendChild(video)
-        this.getVideo = this.getVideo()
+        this.video = this.getVideo()
     }
 
     getVideo() {
