@@ -2,16 +2,31 @@ import {CreateVeoNode} from "./createVeoNode.js";
 import {formatTime, formatVideo, isDom, isPc} from "../utils/format.js";
 
 export class VeoPlayer extends CreateVeoNode {
+    #SLIDE_OFFSET = 0.8 // 提示滑块偏移量
+    #VOLUME_LEN = 100 // 音量总长
+    #timer = null;
     durationTime = 1
-    PERCENTILE = 100 // 百分比
-    SLIDE_OFFSET = 0.8 // 提示滑块偏移量
-    VOLUME_LEN = 100 // 音量总长
     isNode = true;
-    timer = null;
     isError = false
+    durationFormatTime = null
 
     constructor(arg) {
-        let {id, poster, volume, style, bokeh, plugins, islive, url, width, height, speed, autoplay, setting} = arg
+        let {
+            id,
+            poster,
+            volume,
+            style,
+            muted,
+            bokeh,
+            plugins,
+            islive,
+            url,
+            width,
+            height,
+            speed,
+            autoplay,
+            setting
+        } = arg
         let w = width || 665
         let h = height || 440
         super({...arg, width: w, height: h})
@@ -21,13 +36,15 @@ export class VeoPlayer extends CreateVeoNode {
         this.isNode = isDom(id)
         this.poster = poster || null
         this.url = url
-        this.islive = islive
+        this.islive = islive || false
+        this.muted = muted || false
         this.bokeh = bokeh
         this.speed = speed
-        this.autoplay = autoplay
+        this.autoplay = autoplay || false
         this.volume = volume || 70
         this.initNode()
         this.initPlayer()
+        this.veoIsMuted(this.muted)
     }
 
     initNode() {
@@ -127,14 +144,19 @@ export class VeoPlayer extends CreateVeoNode {
             veoVolume,
             veoVolumeOutcon
         } = this.initNode()
-        veo.volume = this.volume / 100
+        // 如果是PC端则动态设置音量，移动端音量直接拉满
+        if (isPc()) {
+            veo.volume = this.volume / 100
+        } else {
+            veo.volume = 1
+        }
         this.veoLoadStart();
         this.veoLoaded();
         this.containerMouse()
         this.veoWaiting();
         this.veoError();
         this.veoPlaying();
-        if (!this.isBool(this.islive)) {
+        if (this.islive != true) {
             this.veoMouseTime();
             if (veoSpeed != null) {
                 this.veoSpeedNode()
@@ -199,11 +221,13 @@ export class VeoPlayer extends CreateVeoNode {
 
             let duration = e.target.duration
             // Infinity 超出无穷大 或为 视频实时
-            if (this.isBool(this.islive) === false && duration != Infinity) {
+            if (this.islive === false && duration !== Infinity) {
                 let spanNode = veoTimeTotal.querySelector("span")
                 let svgNode = veoTimeTotal.querySelectorAll("svg")
                 this.durationTime = duration
                 let time = formatTime(duration)
+                console.log(time)
+                this.durationFormatTime = time
                 svgNode[0].style.display = svgNode[1].style.display = veoLoading.style.display = 'none';
                 spanNode.innerHTML = time
                 this.veoProgressBuffer()
@@ -231,11 +255,11 @@ export class VeoPlayer extends CreateVeoNode {
         const {veo, veoPosterImg} = this.initNode()
         let isObj = this.isObject(this.bokeh)
         let isStr = this.isString(this.bokeh)
-        this.timer = null
+        this.#timer = null
         if (isObj) {
             let seconds = this.isNumber(this.bokeh.seconds)
             // 截取第一帧作为封面
-            this.timer = setTimeout(() => {
+            this.#timer = setTimeout(() => {
                 let canvas = document.createElement('canvas')
                 let width = veo.videoWidth
                 let height = veo.videoWidth
@@ -294,6 +318,7 @@ export class VeoPlayer extends CreateVeoNode {
         } else {
             veoTimeSvgs[0].style.display = veoLoading.style.display = 'flex';
             veoTimeSvgs[1].style.display = veoErrorEl.style.display = 'none'
+            this.isError = false
         }
     }
 
@@ -465,7 +490,7 @@ export class VeoPlayer extends CreateVeoNode {
             }
             // 超出最大盒子限制
             if ((x + veoSlideWidthHalf) > veoConWidth) {
-                let left = (veoConWidth * this.PERCENT) / (veoConWidth + veoTimeSlide.offsetWidth) - this.SLIDE_OFFSET
+                let left = (veoConWidth * this.PERCENT) / (veoConWidth + veoTimeSlide.offsetWidth) - this.#SLIDE_OFFSET
                 veoTimeSlide.style.left = left + '%'
             }
         })
@@ -785,12 +810,8 @@ export class VeoPlayer extends CreateVeoNode {
             volumeList[i].addEventListener("click", (e) => {
                 const {val} = e.target.dataset
                 if (val === "volume") {
-                    volumeList[0].style.display = "none"
-                    volumeList[1].style.display = "block"
                     this.veoIsMuted(true)
                 } else {
-                    volumeList[0].style.display = "block"
-                    volumeList[1].style.display = "none"
                     this.veoIsMuted(false)
                 }
             })
@@ -801,8 +822,17 @@ export class VeoPlayer extends CreateVeoNode {
      * 设置静音
      */
     veoIsMuted(isMuted) {
+        const {veoVolume} = this.initNode()
+        const volumeList = veoVolume.getElementsByTagName("svg")
         const {veo} = this.initNode()
-        veo.muted = isMuted
+        veo.muted = this.muted = isMuted
+        if (isMuted) {
+            volumeList[0].style.display = "none"
+            volumeList[1].style.display = "block"
+        } else {
+            volumeList[0].style.display = "block"
+            volumeList[1].style.display = "none"
+        }
     }
 
     /**
@@ -822,11 +852,11 @@ export class VeoPlayer extends CreateVeoNode {
         let height = 0
         let volumeNum = 0
         if (type == 'init') {
-            volumeNum = this.volume / this.VOLUME_LEN
-            height = ((volumeHeight * this.volume) / this.VOLUME_LEN) / volumeHeight * 100
+            volumeNum = this.volume / this.#VOLUME_LEN
+            height = ((volumeHeight * this.volume) / this.#VOLUME_LEN) / volumeHeight * 100
         } else {
             const y = volumeHeight - eY
-            volumeNum = ((this.VOLUME_LEN * y) / volumeHeight) / 100
+            volumeNum = ((this.#VOLUME_LEN * y) / volumeHeight) / 100
             height = (y / volumeHeight) * 100
         }
         veo.volume = volumeNum
@@ -857,14 +887,10 @@ export class VeoPlayer extends CreateVeoNode {
             if (by > -1 && by <= 100) {
                 this.voeInitVolume(null, proHeight - offset)
                 this.veoIsMuted(false)
-                volumeList[1].style.display = "none"
-                volumeList[0].style.display = "block"
             }
 
             if (by <= 0) {
                 this.veoIsMuted(true)
-                volumeList[0].style.display = "none"
-                volumeList[1].style.display = "block"
             }
         }
 

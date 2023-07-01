@@ -26,9 +26,9 @@ export class CreateVeoNode extends paramsRules {
     #VOLUME_MUTE_LABEL = "静音"
     #VIDEO_FORMAT_LIST = [".m3u8", ".mp4", ".webm"]
     constructor(arg) {
-        let { id, style, url, width,plugins, islive, height, speed, autoplay, setting: settings } = arg
+        let {id, style, url, width, plugins, islive, height, speed, autoplay, setting} = arg
         super(arg)
-        this.idNode = id
+        this.id = id
         this.style = style
         this.url = url
         this.plugins = plugins || []
@@ -37,7 +37,7 @@ export class CreateVeoNode extends paramsRules {
         this.height = height
         this.speed = speed || [2, 1.5, 1, 0.75, 0.5]
         this.autoplay = autoplay
-        this.settings = settings || ["loop"]
+        this.setting = setting || ["loop"]
         this.#createParentNode()
     }
     /**
@@ -45,8 +45,8 @@ export class CreateVeoNode extends paramsRules {
      * @returns ElementNode
      */
     getParentNode() {
-        let isNode = isDom(this.idNode)
-        return isNode ? document.getElementById(this.idNode) : this.idNode
+        let isNode = isDom(this.id)
+        return isNode ? document.getElementById(this.id) : this.id
     }
 
     /**
@@ -108,12 +108,16 @@ export class CreateVeoNode extends paramsRules {
                 sourceaAdd(i)
             }
         }
-
-
-
         video.setAttribute("crossorigin", "anonymous")
         veoVideo.appendChild(video)
+        this.getVideo = this.getVideo()
     }
+
+    getVideo() {
+        const parentNode = this.getParentNode()
+        return parentNode.querySelector("video")
+    }
+
     /**
      * 创建 【封面】 节点
      */
@@ -396,7 +400,7 @@ export class CreateVeoNode extends paramsRules {
         veoSettingIncon.setAttribute("class", "veo-setting-incon")
         veoSettingOutcon.appendChild(veoSettingIncon)
         veoSetting.appendChild(veoSettingOutcon)
-        const VEO_SETT_LIST = this.settings
+        const VEO_SETT_LIST = this.setting
         for (let i = 0; i < VEO_SETT_LIST.length; i++) {
             const veoSettingItem = document.createElement("div")
             const itemSpan = document.createElement("span")

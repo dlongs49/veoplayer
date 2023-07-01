@@ -50,8 +50,8 @@
         },
         // volume: 50,
         // autoplay: true,
-        speed: [2, 1.5, 1, 0.75],
-        setting: ["loop", "pip"],
+        // speed: [2, 1.5, 1, 0.75],
+        // setting: ["loop", "pip"],
         plugins: ["speed", "download", "setting", "capture"]
     })
 
@@ -64,6 +64,7 @@
             themeColor: "#91CB40",
             processColor: "#91CB40"
         },
+        muted: false,
         poster: "http://localhost:3000/static/demo.png",
         bokeh: "https://img1.imgtp.com/2023/06/29/Oq42MCme.png",
         // bokeh:{
@@ -73,7 +74,7 @@
         setting: ["loop", "pip"],
         plugins: ["speed", "download", "setting", "capture"]
     })
-
+    console.log(player)
     // 视频预加载
     player.veoLoadStart((e) => {
         console.log("视频预加载", e);
