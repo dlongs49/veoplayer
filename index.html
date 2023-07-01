@@ -33,6 +33,7 @@
 </body>
 <script type="module">
     import  VeoPlayer  from './dist/veoplayer.esm.min.js'
+    import {play} from "./packages/svg_js/play_pause.js";
     // import VeoPlayer from './test/veoplayer.esm.js'
 
     let mPlayer = new VeoPlayer({
@@ -56,7 +57,7 @@
 
     let player = new VeoPlayer({
         id: "test1",
-        url: "https://wave.video/embed/649c405b5643bb14d8e353f2/649c409834723d0cb056053c0.mp4",
+        url: "https://wave.video/embed/649c405b5643bb14d8e353f2/649c409834723d0cb056053c.mp4",
         width: 665,
         height: 440,
         style: {
@@ -72,6 +73,8 @@
         setting: ["loop", "pip"],
         plugins: ["speed", "download", "setting", "capture"]
     })
+    console.log(player)
+    /**
     // 视频预加载
     player.veoLoadStart((e) => {
         console.log("视频预加载", e);
@@ -101,9 +104,9 @@
         console.log("暂停播放", e);
     })
     // 视频播放加载异常
-    // player.veoError((e) => {
-    //     console.log("视频播放加载异常", e);
-    // })
+    player.veoError((e) => {
+        console.log("视频播放加载异常", e);
+    })
     // 加载中
     player.veoWaiting((e) => {
         console.log("加载中", e);
@@ -112,6 +115,8 @@
     player.veoPlaying((e) => {
         console.log("播放中", e);
     });
+
+     **/
 </script>
 
 <script>
