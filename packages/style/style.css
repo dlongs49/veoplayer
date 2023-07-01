@@ -194,6 +194,7 @@
 }
 .veo-container .veo-control .veo-player-con .veo-left-control .veo-play-pause svg {
   pointer-events: none;
+  vertical-align: baseline !important;
 }
 .veo-container .veo-control .veo-player-con .veo-left-control .veo-play-pause svg path {
   transition: 0.3s all;
@@ -352,6 +353,7 @@
 }
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-download svg {
   pointer-events: none;
+  vertical-align: baseline !important;
 }
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-download svg path {
   transition: 0.3s all;
@@ -391,6 +393,7 @@
 }
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-setting svg {
   pointer-events: none;
+  vertical-align: baseline !important;
 }
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-setting svg path {
   transition: 0.3s all;
@@ -471,6 +474,7 @@
 }
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-capture svg {
   pointer-events: none;
+  vertical-align: baseline !important;
 }
 .veo-container .veo-control .veo-player-con .veo-right-control .veo-capture svg path {
   transition: 0.3s all;

@@ -16,21 +16,24 @@
 
         #test,
         #test1,
-        #test2 {
+        #test2,
+        .btn-primary {
             margin-left: 18px;
+            margin-top: 20px;
         }
     </style>
     <link rel="stylesheet" href="./packages/style/style.css">
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 
 <script src="https://cdn.bootcdn.net/ajax/libs/hls.js/1.4.0/hls.min.js"></script>
-
 <body>
 <div id="test"></div>
-<div id="test1" style="margin-top: 20px;"></div>
-<video id="videoMedia"></video>
-<button id="bbtn">点击</button>
+<div id="test1"></div>
+<button type="button" class="btn btn-primary" id="btninfo">点击全屏</button>
+<button type="button" class="btn btn-primary" id="btndes">销毁实例</button>
+<video id="videoMedia" style="display: block"></video>
 </body>
 <script type="module">
     import VeoPlayer from './dist/veoplayer.esm.min.js'
@@ -117,8 +120,11 @@
     player.veoPlaying((e) => {
         console.log("播放中", e);
     });
-    document.querySelector("#bbtn").onclick = () => {
+    document.querySelector("#btninfo").onclick = () => {
         player.veoScreen(true)
+    }
+    document.querySelector("#btndes").onclick = () => {
+        player.veoDestroy(true)
     }
 </script>
 

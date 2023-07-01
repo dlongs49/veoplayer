@@ -10,6 +10,7 @@ $veo-process-size: 4px;
 @mixin svgSty {
   svg {
     pointer-events: none;
+    vertical-align: baseline !important;
 
     path {
       transition: .3s all;

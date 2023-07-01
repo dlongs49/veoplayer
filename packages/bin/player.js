@@ -969,4 +969,19 @@ export class VeoPlayer extends CreateVeoNode {
             }
         })
     }
+
+    /**
+     * 销毁
+     */
+    veoDestroy(params) {
+        const {veoContainer} = this.initNode()
+        if (params) {
+            veoContainer.remove()
+        } else {
+            veoContainer.innerHTML = null
+            veoContainer.removeAttribute("style")
+            veoContainer.removeAttribute("class")
+        }
+
+    }
 }
