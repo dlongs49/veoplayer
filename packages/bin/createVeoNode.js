@@ -40,6 +40,7 @@ export class CreateVeoNode extends paramsRules {
         this.autoplay = autoplay
         this.setting = setting || ["loop"]
         this.#createParentNode()
+
     }
     /**
      * 返回根元素
@@ -63,6 +64,9 @@ export class CreateVeoNode extends paramsRules {
             }
             if (v.key === "processColor") {
                 parentNode.style.setProperty("--veo-process-color", v.value)
+            }
+            if (v.key === "animation") {
+                this.isAnimation = v.value === "yes"
             }
         })
         parentNode.setAttribute("class", "veo-container veo-control-isshow")

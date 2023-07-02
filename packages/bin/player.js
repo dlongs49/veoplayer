@@ -158,6 +158,8 @@ export class VeoPlayer extends CreateVeoNode {
         this.veoWaiting();
         this.veoError();
         this.veoPlaying();
+
+
         if (this.islive != true) {
             this.veoMouseTime();
             if (veoSpeed != null) {
@@ -165,16 +167,19 @@ export class VeoPlayer extends CreateVeoNode {
                 this.mouseInout(veoSpeed, veoSpeedCon, "opacity")
             }
             if (veoDownload != null) {
-                this.mouseHover(veoDownload)
+                if (this.isAnimation) {
+                    this.mouseHover(veoDownload)
+                }
                 this.voeDownLoad()
             }
             if (veoSetting != null) {
-                this.mouseHover(veoSetting)
-                this.mouseInout(veoSetting, veoSettingOutcon, "opacity")
                 this.handleVeoSetting()
+                this.mouseInout(veoSetting, veoSettingOutcon, "opacity")
             }
             if (veoCapture != null) {
-                this.mouseHover(veoCapture)
+                if (this.isAnimation) {
+                    this.mouseHover(veoCapture)
+                }
                 this.veoCapture();
             }
         }
@@ -183,10 +188,14 @@ export class VeoPlayer extends CreateVeoNode {
         this.veoPlayEnded();
         this.veoScreen()
         this.veoKeyCode();
-        this.mouseHover(veoScreen)
+        if (this.isAnimation) {
+            this.mouseHover(veoScreen)
+        }
         if (isPc()) {
-            this.mouseHover(veoVolume.querySelectorAll("svg")[0])
-            this.mouseHover(veoVolume.querySelectorAll("svg")[1])
+            if (this.isAnimation) {
+                this.mouseHover(veoVolume.querySelectorAll("svg")[0])
+                this.mouseHover(veoVolume.querySelectorAll("svg")[1])
+            }
             this.veoIsMuted(this.muted)
             this.veoVolume()
             this.mouseInout(veoVolume, veoVolumeOutcon, "opacity")
@@ -765,7 +774,8 @@ export class VeoPlayer extends CreateVeoNode {
      * 设置开关
      */
     handleVeoSetting() {
-        const {veoSwitch, veo} = this.initNode()
+        const {veoSwitch, veo, veoSetting} = this.initNode()
+
         for (let i = 0; i < veoSwitch.length; i++) {
             veoSwitch[i].addEventListener("click", (e) => {
                 if (veoSwitch[i].classList.length === 1) {
