@@ -140,7 +140,7 @@ export class VeoPlayer extends CreateVeoNode {
             veoDownload,
             veoCapture,
             veoSpeedCon,
-            veoLoading,
+            veoScreen,
             veoSetting,
             veoSettingOutcon,
             veoVolume,
@@ -165,13 +165,16 @@ export class VeoPlayer extends CreateVeoNode {
                 this.mouseInout(veoSpeed, veoSpeedCon, "opacity")
             }
             if (veoDownload != null) {
+                this.mouseHover(veoDownload)
                 this.voeDownLoad()
             }
             if (veoSetting != null) {
+                this.mouseHover(veoSetting)
                 this.mouseInout(veoSetting, veoSettingOutcon, "opacity")
                 this.handleVeoSetting()
             }
             if (veoCapture != null) {
+                this.mouseHover(veoCapture)
                 this.veoCapture();
             }
         }
@@ -180,7 +183,10 @@ export class VeoPlayer extends CreateVeoNode {
         this.veoPlayEnded();
         this.veoScreen()
         this.veoKeyCode();
+        this.mouseHover(veoScreen)
         if (isPc()) {
+            this.mouseHover(veoVolume.querySelectorAll("svg")[0])
+            this.mouseHover(veoVolume.querySelectorAll("svg")[1])
             this.veoIsMuted(this.muted)
             this.veoVolume()
             this.mouseInout(veoVolume, veoVolumeOutcon, "opacity")
@@ -329,6 +335,18 @@ export class VeoPlayer extends CreateVeoNode {
             veoTimeSvgs[1].style.display = veoErrorEl.style.display = 'none'
             this.isError = false
         }
+    }
+
+    /**
+     * 控件加载交互
+     */
+    mouseHover(el) {
+        el.addEventListener("mouseenter", (e) => {
+            el.classList.add('labelFadeAnimation')
+        })
+        el.addEventListener("mouseleave", (e) => {
+            el.classList.remove('labelFadeAnimation')
+        })
     }
 
     /**
