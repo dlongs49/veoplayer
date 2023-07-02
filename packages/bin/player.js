@@ -637,8 +637,6 @@ export class VeoPlayer extends CreateVeoNode {
             let {type} = e.target.dataset
             this.veoPlayPauseNode(type)
         })
-        // this.veoPlay()
-        // this.veoPause()
     }
 
     /**
