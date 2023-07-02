@@ -52,6 +52,7 @@
         <button type="button" class="btn btn-primary" id="screen1">点击全屏</button>
         <button type="button" class="btn btn-primary" id="remove1">销毁实例</button>
         <button type="button" class="btn btn-primary" id="playpause1">播放/暂停</button>
+        <button type="button" class="btn btn-primary" id="muted1">开启/关闭静音</button>
     </div>
 </div>
 
@@ -156,6 +157,11 @@
         } else {
             player.veoPause()
         }
+    }
+    let isMuted = false
+    document.querySelector("#muted1").onclick = () => {
+        isMuted = !isMuted
+        player.veoIsMuted(isMuted)
     }
 </script>
 

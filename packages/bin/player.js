@@ -826,9 +826,8 @@ export class VeoPlayer extends CreateVeoNode {
      * 设置静音
      */
     veoIsMuted(isMuted) {
-        const {veoVolume} = this.initNode()
+        const {veo, veoVolume} = this.initNode()
         const volumeList = veoVolume.getElementsByTagName("svg")
-        const {veo} = this.initNode()
         veo.muted = this.muted = isMuted
         if (isMuted) {
             volumeList[0].style.display = "none"
