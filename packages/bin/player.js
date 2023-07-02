@@ -637,34 +637,24 @@ export class VeoPlayer extends CreateVeoNode {
             let {type} = e.target.dataset
             this.veoPlayPauseNode(type)
         })
-        this.veoPlay()
-        this.veoPause()
+        // this.veoPlay()
+        // this.veoPause()
     }
 
     /**
      * method
      * 播放
      */
-    veoPlay(callback) {
-        const {veo} = this.initNode()
-        veo.addEventListener("play", (e) => {
-            if (callback) {
-                callback(e)
-            }
-        })
+    veoPlay() {
+        this.veoPlayPauseNode("play")
     }
 
     /**
      * method
      * 暂停
      */
-    veoPause(callback) {
-        const {veo} = this.initNode()
-        veo.addEventListener("pause", (e) => {
-            if (callback) {
-                callback(e)
-            }
-        })
+    veoPause() {
+        this.veoPlayPauseNode("pause")
     }
 
     /**
@@ -709,7 +699,6 @@ export class VeoPlayer extends CreateVeoNode {
      */
     veoSpeedNode() {
         const {veo, veoSpeedItemNode} = this.initNode()
-        console.log(veoSpeedItemNode)
         for (let i = 0; i < veoSpeedItemNode.length; i++) {
             veoSpeedItemNode[i].addEventListener("click", (e) => {
                 for (let idx in veoSpeedItemNode) {
