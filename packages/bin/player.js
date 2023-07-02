@@ -712,6 +712,18 @@ export class VeoPlayer extends CreateVeoNode {
     }
 
     /**
+     * 播放速度发生改变
+     */
+    veoSpeedChange(callback) {
+        const {veo} = this.initNode()
+        veo.addEventListener("ratechange", (e) => {
+            if (callback) {
+                callback(e)
+            }
+        })
+    }
+
+    /**
      * 视频下载
      */
     voeDownLoad() {
@@ -866,6 +878,20 @@ export class VeoPlayer extends CreateVeoNode {
         veoVolumeProgressIng.style.height = height + '%';
         veoVolumeProgressBar.style.bottom = (height - 8) + '%';
         veoVolumeProgressPertxt.innerHTML = (Math.floor(height)) + '%';
+    }
+
+    /**
+     * 音量改变时
+     */
+    veoVolumeChange(callback) {
+        const {
+            veo
+        } = this.initNode()
+        veo.addEventListener("volumechange", (e) => {
+            if (callback) {
+                callback(e)
+            }
+        })
     }
 
     /**

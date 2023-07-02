@@ -143,6 +143,14 @@
     player.veoPlaying((e) => {
         console.log("播放中", e);
     });
+    // 音量改变
+    player.veoVolumeChange((e) => {
+        console.log(e)
+    })
+    // 倍速改变
+    player.veoSpeedChange((e) => {
+        console.log(e)
+    })
     document.querySelector("#screen1").onclick = () => {
         player.veoScreen(true)
     }
