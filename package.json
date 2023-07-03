@@ -1,6 +1,6 @@
 {
   "name": "veoplayer",
-  "version": "1.0.1",
+  "version": "1.0.1-beta",
   "description": "A native JavaScript concise video player",
   "main": "dist/veoplayer.esm.min.js",
   "module": "dist/veoplayer.esm.min.js",
