@@ -14,9 +14,6 @@ export class paramsRules {
             let arr = []
             Object.keys(this.style).map((v, i) => {
                 let value = Object.values(this.style)[i]
-                if (typeof value != 'string') {
-                    throw new Error(`${v}数据类型错误，期待数据类型值[string]`)
-                }
                 arr.push({ key: v, value })
             })
             return arr

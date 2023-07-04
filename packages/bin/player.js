@@ -564,7 +564,7 @@ export class VeoPlayer extends CreateVeoNode {
                 let currentTime = (duration * x) / veoConWidth
                 const ingWidth = x / veoConWidth
                 veoIng.style.width = (ingWidth * 100) + '%'
-                veoSub.style.left = ((ingWidth * 100) - 0.5) + '%'
+                veoSub.style.left = ((ingWidth * 100) - 0.6) + '%'
                 let time = formatTime(currentTime)
                 veoTimeIng.innerHTML = time
                 veo.currentTime = currentTime
@@ -595,7 +595,7 @@ export class VeoPlayer extends CreateVeoNode {
             let currentTime = (duration * x) / veoConWidth
             const ingWidth = x / veoConWidth
             veoIng.style.width = (ingWidth * 100) + '%'
-            veoSub.style.left = ((ingWidth * 100) - 0.5) + '%'
+            veoSub.style.left = ((ingWidth * 100) - 0.6) + '%'
             let time = formatTime(currentTime)
             veoTimeIng.innerHTML = time
             veo.currentTime = currentTime

@@ -25,6 +25,8 @@ export class CreateVeoNode extends paramsRules {
     #VOLUME_LABEL = "音量"
     #VOLUME_MUTE_LABEL = "静音"
     #VIDEO_FORMAT_LIST = [".m3u8", ".mp4", ".webm"]
+    #PROCESS_SIZE = 6
+
     constructor(arg) {
         let {id, style, url, width, anonymous, plugins, islive, height, speed, autoplay, setting} = arg
         super(arg)
@@ -42,6 +44,7 @@ export class CreateVeoNode extends paramsRules {
         this.#createParentNode()
 
     }
+
     /**
      * 返回根元素
      * @returns ElementNode
@@ -60,13 +63,31 @@ export class CreateVeoNode extends paramsRules {
         this.styleArr = this.styleRulus()
         this.styleArr.map(v => {
             if (v.key === "themeColor") {
+                if (!this.isString(v.value)) {
+                    throw new Error(`themeColor不符合数据类型，期待数据类型为 [string]`)
+                }
                 parentNode.style.setProperty("--veo-color-primary", v.value || '#fff')
             }
             if (v.key === "processColor") {
+                if (!this.isString(v.value)) {
+                    throw new Error(`processColor不符合数据类型，期待数据类型为 [string]`)
+                }
                 parentNode.style.setProperty("--veo-process-color", v.value)
             }
             if (v.key === "animation") {
-                this.isAnimation = v.value === "yes"
+                if (!this.isBool(v.value)) {
+                    throw new Error(`animation不符合数据类型，期待数据类型为 [boolean]`)
+                }
+                this.isAnimation = v.value
+            }
+            if (v.key === "processHeight") {
+                if (!this.isNumber(v.value)) {
+                    throw new Error(`processHeight不符合数据类型，期待数据类型为 [number]`)
+                }
+                if (v.value > 6) {
+                    this.#PROCESS_SIZE = v.value
+                    parentNode.style.setProperty("--veo-process-size", v.value + "px")
+                }
             }
         })
         parentNode.setAttribute("class", "veo-container veo-control-isshow")
@@ -84,6 +105,7 @@ export class CreateVeoNode extends paramsRules {
         this.#createControlNode()
 
     }
+
     /**
      * 创建【视频】节点
      */
@@ -141,6 +163,7 @@ export class CreateVeoNode extends paramsRules {
         veoPoster.appendChild(veoPosterBg)
         parentNode.appendChild(veoPoster)
     }
+
     /**
      * 创建 【错误】节点
      */
@@ -165,6 +188,7 @@ export class CreateVeoNode extends paramsRules {
         veoRefreshOn.setAttribute("href", "javascript:void(0)")
         veoError.appendChild(veoErrorMsg)
     }
+
     /**
      * 创建 【加载】 节点
      */
@@ -176,6 +200,7 @@ export class CreateVeoNode extends paramsRules {
         parentNode.appendChild(veoLoading)
         this.#createIsPlay()
     }
+
     /**
      * 创建容器播放交互 节点
      */
@@ -193,9 +218,10 @@ export class CreateVeoNode extends paramsRules {
         veoMpause.innerHTML = pause_mutual
         parentNode.appendChild(veoMutual)
     }
+
     /**
      * 创建 【底部控制区】 节点
-     * @returns {ElementNode} VEO_PROCESS_CON_NODE, VEO_PLAYER_CON_NODE
+     * @returns {ElementNode} VEO_PROCESS_VIR_NODE, VEO_PLAYER_CON_NODE
      */
     #createControlNode() {
         const parentNode = this.getParentNode()
@@ -204,8 +230,12 @@ export class CreateVeoNode extends paramsRules {
         veoControl.setAttribute("class", "veo-control")
         if (!this.isBool()) {
             const veoProcessCon = document.createElement("div")
+            const veoProcessVir = document.createElement("div")
             veoProcessCon.setAttribute("class", "veo-process-con")
+            veoProcessVir.setAttribute("class", "veo-process-vir")
+            veoProcessCon.appendChild(veoProcessVir)
             veoControl.appendChild(veoProcessCon)
+            veoProcessCon.style.height = `${this.#PROCESS_SIZE}px`
             this.#createProgressNode()
         }
         const veoPlayerCon = document.createElement("div")
@@ -216,21 +246,23 @@ export class CreateVeoNode extends paramsRules {
         this.#createPlayerNode()
 
     }
+
     /**
      * @returns {Object} 返回底部控制区域
      */
     #getControlNode() {
         const parentNode = this.getParentNode()
         return {
-            VEO_PROCESS_CON_NODE: parentNode.getElementsByClassName("veo-process-con")[0],
+            VEO_PROCESS_VIR_NODE: parentNode.getElementsByClassName("veo-process-vir")[0],
             VEO_PLAYER_CON_NODE: parentNode.getElementsByClassName("veo-player-con")[0]
         }
     }
+
     /**
      * 创建 【进度条】区域
      */
     #createProgressNode() {
-        const { VEO_PROCESS_CON_NODE } = this.#getControlNode()
+        const {VEO_PROCESS_VIR_NODE} = this.#getControlNode()
         const VEO_PROCESS_LIST = [
             "veo-process-out",
             "veo-process-ing",
@@ -240,21 +272,31 @@ export class CreateVeoNode extends paramsRules {
         for (let i = 0; i < VEO_PROCESS_LIST.length; i++) {
             const veoProcess = document.createElement("div")
             veoProcess.setAttribute("class", VEO_PROCESS_LIST[i])
-            VEO_PROCESS_CON_NODE.appendChild(veoProcess)
+            VEO_PROCESS_VIR_NODE.appendChild(veoProcess)
             let pro = this.styleArr.find(v => v.key === "processColor")
             if (pro) {
                 if (i === 1 || i === 3) {
                     veoProcess.style.setProperty("background", pro.value)
                     veoProcess.setAttribute("data-color", pro.value)
                 }
+                if (i === 3) {
+                    // 进度条最小的高度
+                    if (this.#PROCESS_SIZE > 6) {
+                        let h = this.#PROCESS_SIZE + 10
+                        veoProcess.style.height = veoProcess.style.width = h + "px"
+                        // 计算圆形滑块的 top 值 相对于父级
+                        veoProcess.style.top = ((this.#PROCESS_SIZE * 0.8 - h) / 2) + 1 + "px"
+                    }
+                }
             }
         }
     }
+
     /**
      * 创建 【播放区域】节点
      */
     #createPlayerNode() {
-        const { VEO_PLAYER_CON_NODE } = this.#getControlNode()
+        const {VEO_PLAYER_CON_NODE} = this.#getControlNode()
         const VEO_PLAYER_LIST = [
             "veo-left-control",
             "veo-center-control",
@@ -269,10 +311,10 @@ export class CreateVeoNode extends paramsRules {
         if (!this.isBool()) {
             for (let i = 0; i < this.plugins.length; i++) {
                 let item = this.plugins[i]
-                if(item === "speed") {
+                if (item === "speed") {
                     this.#createSpeedNode();
                 }
-                if(item === "download") {
+                if (item === "download") {
                     this.#createDownloadNode();
                 }
                 if (item === "setting") {
@@ -288,6 +330,7 @@ export class CreateVeoNode extends paramsRules {
         }
         this.#createFullScreenNode()
     }
+
     /**
      * @returns {Object} 返回底部左中右区域
      */
@@ -299,11 +342,12 @@ export class CreateVeoNode extends paramsRules {
             VEO_RIGHT_CONTROL_NODE: parentNode.getElementsByClassName("veo-right-control")[0]
         }
     }
+
     /**
      * 创建 【播放 & 暂停 & 时长】节点
      */
     #createPlayPauseNode() {
-        const { VEO_LEFT_CONTROL_NODE } = this.#getLeftCnterRightNode()
+        const {VEO_LEFT_CONTROL_NODE} = this.#getLeftCnterRightNode()
         const veoPlayPause = document.createElement("div")
         veoPlayPause.setAttribute("class", "veo-play-pause")
         veoPlayPause.setAttribute("label", this.#PAUSE_LABEL)
@@ -312,11 +356,12 @@ export class CreateVeoNode extends paramsRules {
         VEO_LEFT_CONTROL_NODE.appendChild(veoPlayPause)
         this.#createDurationNode()
     }
+
     /**
      * 创建 【时长】节点
      */
     #createDurationNode() {
-        const { VEO_LEFT_CONTROL_NODE } = this.#getLeftCnterRightNode()
+        const {VEO_LEFT_CONTROL_NODE} = this.#getLeftCnterRightNode()
         const veoTime = document.createElement("div")
         veoTime.setAttribute("class", "veo-time")
         VEO_LEFT_CONTROL_NODE.appendChild(veoTime)
@@ -345,16 +390,18 @@ export class CreateVeoNode extends paramsRules {
             }
         }
     }
+
     /**
-    * 待定
-    */
-    #createCenterNode() { }
+     * 待定
+     */
+    #createCenterNode() {
+    }
 
     /**
      * 创建 【倍速播放】节点
      */
     #createSpeedNode() {
-        const { VEO_RIGHT_CONTROL_NODE } = this.#getLeftCnterRightNode()
+        const {VEO_RIGHT_CONTROL_NODE} = this.#getLeftCnterRightNode()
         const veoSpeed = document.createElement("div")
         veoSpeed.setAttribute("class", "veo-speed")
         veoSpeed.setAttribute("label", this.#SPEED_LABEL)
@@ -382,22 +429,24 @@ export class CreateVeoNode extends paramsRules {
             }
         }
     }
+
     /**
      * 创建 【下载】节点
      */
     #createDownloadNode() {
-        const { VEO_RIGHT_CONTROL_NODE } = this.#getLeftCnterRightNode()
+        const {VEO_RIGHT_CONTROL_NODE} = this.#getLeftCnterRightNode()
         const veoDownload = document.createElement("div")
         veoDownload.setAttribute("class", "veo-download")
         veoDownload.setAttribute("label", this.#DOWNLOAD_LABEL)
         veoDownload.innerHTML = download
         VEO_RIGHT_CONTROL_NODE.appendChild(veoDownload)
     }
+
     /**
      * 创建 【设置】节点
      */
     #createSettingNode() {
-        const { VEO_RIGHT_CONTROL_NODE } = this.#getLeftCnterRightNode()
+        const {VEO_RIGHT_CONTROL_NODE} = this.#getLeftCnterRightNode()
         const veoSetting = document.createElement("div")
         veoSetting.setAttribute("class", "veo-setting")
         veoSetting.setAttribute("label", this.#SETTING_LABEL)
@@ -433,22 +482,24 @@ export class CreateVeoNode extends paramsRules {
         }
         VEO_RIGHT_CONTROL_NODE.appendChild(veoSetting)
     }
+
     /**
      * 创建 【截图】节点
      */
     #createCameraNode() {
-        const { VEO_RIGHT_CONTROL_NODE } = this.#getLeftCnterRightNode()
+        const {VEO_RIGHT_CONTROL_NODE} = this.#getLeftCnterRightNode()
         const veoCapture = document.createElement("div")
         veoCapture.setAttribute("class", "veo-capture")
         veoCapture.setAttribute("label", this.#CAPTURE_LABEL)
         veoCapture.innerHTML = capture
         VEO_RIGHT_CONTROL_NODE.appendChild(veoCapture)
     }
+
     /**
      * 创建 【音量】节点
      */
     #createVolumeNode() {
-        const { VEO_RIGHT_CONTROL_NODE } = this.#getLeftCnterRightNode()
+        const {VEO_RIGHT_CONTROL_NODE} = this.#getLeftCnterRightNode()
         const veoVolume = document.createElement("div")
         veoVolume.setAttribute("class", "veo-volume")
         veoVolume.setAttribute("label", this.#VOLUME_LABEL)
@@ -485,6 +536,7 @@ export class CreateVeoNode extends paramsRules {
         v[1].setAttribute("data-val", "volume-mute")
 
     }
+
     /**
      * 创建 【全屏 & 退出全屏】节点
      */

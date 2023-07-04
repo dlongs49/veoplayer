@@ -1,5 +1,5 @@
 @charset "utf-8";
-$veo-process-size: 4px;
+
 
 @mixin wh {
   width: 100%;
@@ -75,6 +75,7 @@ $veo-process-size: 4px;
   position: relative;
   background-color: #000;
   --veo-color-primary: #fff;
+  --veo-process-size: 6px;
   -webkit-tap-highlight-color: transparent; // 解决移动端点击有背景颜色
   user-select: none;
 
@@ -175,25 +176,38 @@ $veo-process-size: 4px;
     transition: opacity .1s cubic-bezier(.4, 0, 1, 1);
 
     .veo-process-con {
-      position: relative;
+      display: flex;
+      align-items: center;
       width: 100%;
-      height: $veo-process-size;
+      height: var(--veo-process-size);
       cursor: pointer;
 
-      &:hover {
-        .veo-process-sub {
-          opacity: 1;
+      .veo-process-vir {
+        position: relative;
+        width: 100%;
+        height: 80%;
+        cursor: pointer;
+        transition: transform .1s cubic-bezier(.4, 0, 1, 1);
 
-          &::before {
+        &:hover {
+          height: 100% !important;
+
+          .veo-process-sub {
             opacity: 1;
-            transform: scale(1);
+            transform: none;
           }
         }
       }
 
+
       .veo-process-out {
         @include wh;
         background: rgba(189, 189, 189, 0.705);
+      }
+
+      .veo-process-ing, .veo-process-buff, .veo-process-sub {
+        border-top-right-radius: var(--veo-process-size);
+        border-bottom-right-radius: var(--veo-process-size);
       }
 
       .veo-process-ing {
@@ -201,8 +215,6 @@ $veo-process-size: 4px;
         top: 0;
         height: 100%;
         background: linear-gradient(267deg, #4bb8ff 20.12%, #4aff00 46.25%, #ff9012 100.48%);
-        border-top-right-radius: $veo-process-size;
-        border-bottom-right-radius: $veo-process-size;
         z-index: 1;
         pointer-events: none;
       }
@@ -212,46 +224,23 @@ $veo-process-size: 4px;
         top: 0;
         height: 100%;
         background: rgba(255, 255, 255, 0.38);
-        border-top-right-radius: $veo-process-size;
-        border-bottom-right-radius: $veo-process-size;
         pointer-events: none;
       }
 
       .veo-process-sub {
         opacity: 0;
-        transition: opacity .25s;
         position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+        top: -4px;
+        transform: scale(0);
         left: -0.5%;
-        width: $veo-process-size + 8;
-        height: $veo-process-size + 8;
+        width: 14px;
+        height: 14px;
         border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, .319);
+        border: 2px solid var(--veo-process-color);
         z-index: 1;
-
-        &::before {
-          opacity: 0;
-          transition: opacity .25s;
-          content: " ";
-          position: absolute;
-          transform: scale(0.5);
-          left: 50%;
-          top: 50%;
-          margin-left: -(($veo-process-size + 6)/2);
-          margin-top: -(($veo-process-size + 6)/2);
-          width: $veo-process-size + 6;
-          height: $veo-process-size + 6;
-          background: #fff;
-          border-radius: 50%;
-        }
+        transition: transform .15s cubic-bezier(.4, 0, 1, 1);
       }
 
-      .veo-process-sub[data-color] {
-        &::before {
-          background: var(--veo-process-color);
-        }
-      }
 
       .veo-process-time-slide {
         display: none;
