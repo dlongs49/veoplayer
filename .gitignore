@@ -4,4 +4,5 @@
 *.idea
 *.zip
 *.rar
+*.log
 pnpm-lock.yaml
