@@ -94,9 +94,11 @@
         style: {
             themeColor: "#91CB40",
             processColor: "#91CB40",
-            processHeight: 4
+            processHeight: 4,
+            animation:true
         },
-        muted: false,
+        // autoplay:true,
+        // muted: true,
         anonymous: false,
         poster: "http://localhost:3000/static/demo.png",
         bokeh: "https://img1.imgtp.com/2023/06/29/Oq42MCme.png",
@@ -127,14 +129,6 @@
     //播放结束
     player.veoPlayEnded((e) => {
         console.log("播放结束", e);
-    })
-    // 开始播放
-    player.veoPlay((e) => {
-        console.log("开始播放", e);
-    })
-    // 暂停播放
-    player.veoPause((e) => {
-        console.log("暂停播放", e);
     })
     // 视频播放加载异常
     player.veoError((e) => {
