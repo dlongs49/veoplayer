@@ -7,7 +7,8 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'; // 定位 node-module
 import cssnext from 'postcss-cssnext'; // 兼容 css
 import nodePolyfills from 'rollup-plugin-node-polyfills'
 import strip from "@rollup/plugin-strip";
-import json from './package.json' assert {'json'}
+import json from "./package.json" assert { "json" }
+
 export default {
     input: ["./packages/main.js"],
     external: ["hls.js"],
