@@ -62,28 +62,29 @@
     // import VeoPlayer from './test/veoplayer.esm.js'
     import VeoPlayer from './dist/veoplayer.esm.min.js'
 
-    let mplayer = new VeoPlayer({
-        // id: "test",
-        id: document.querySelector("#test"),
-        url: "https://s.xlzys.com/play/RdGQ2yaD/index.m3u8",
-        // url: "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001",
-        poster: "",
-        // width: 665,
-        // height: 440,
-        // islive: true,
-        style: {
-            themeColor: "#91CB40",
-            processColor: "#91CB40",
-            animation: true,
-            processHeight: 10,
-        },
-        playTime: 500,
-        // volume: 50,
-        // autoplay: true,
-        // speed: [2, 1.5, 1, 0.75],
-        // setting: ["loop", "pip"],
-        plugins: ["speed", "download", "setting", "capture"]
-    })
+    // let mplayer = new VeoPlayer({
+    //     // id: "test",
+    //     id: document.querySelector("#test"),
+    //     url: "https://s.xlzys.com/play/RdGQ2yaD/index.m3u8",
+    //     // url: "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001",
+    //     poster: "",
+    //     // width: 665,
+    //     // height: 440,
+    //     // islive: true,
+    //     muted: true,
+    //     style: {
+    //         themeColor: "#91CB40",
+    //         processColor: "#91CB40",
+    //         animation: true,
+    //         processHeight: 10,
+    //     },
+    //     playTime: 500,
+    //     // volume: 50,
+    //     // autoplay: true,
+    //     // speed: [2, 1.5, 1, 0.75],
+    //     // setting: ["loop", "pip"],
+    //     plugins: ["speed", "download", "setting", "capture"]
+    // })
 
     let player = new VeoPlayer({
         id: "test1",
@@ -95,7 +96,7 @@
             processColor: "#91CB40",
             processHeight: 4
         },
-        muted: false,
+        muted: true,
         anonymous: false,
         poster: "http://localhost:3000/static/demo.png",
         bokeh: "https://img1.imgtp.com/2023/06/29/Oq42MCme.png",
@@ -106,14 +107,14 @@
         setting: ["loop", "pip"],
         plugins: ["speed", "download", "setting", "capture"]
     })
-    console.log(player)
+    // console.log(player)
     // 视频预加载
     player.veoLoadStart((e) => {
-        console.log("视频预加载", e);
+        // console.log("视频预加载", e);
     })
     // 视频加载完成
     player.veoLoaded((e) => {
-        console.log("视频加载完成", e);
+        // console.log("视频加载完成", e);
     })
     // 视频缓冲
     player.veoProgressBuffer((e) => {
@@ -149,7 +150,7 @@
     });
     // 音量改变
     player.veoVolumeChange((e) => {
-        console.log(e)
+        // console.log(e)
     })
     // 倍速改变
     player.veoSpeedChange((e) => {

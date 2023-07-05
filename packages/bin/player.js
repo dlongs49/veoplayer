@@ -199,7 +199,6 @@ export class VeoPlayer extends CreateVeoNode {
                 this.mouseHover(veoVolume.querySelectorAll("svg")[0])
                 this.mouseHover(veoVolume.querySelectorAll("svg")[1])
             }
-            this.veoIsMuted(this.muted)
             this.veoVolume()
             this.mouseInout(veoVolume, veoVolumeOutcon, "opacity")
         }
@@ -934,14 +933,17 @@ export class VeoPlayer extends CreateVeoNode {
         const volumeHeight = veoVolumeProgress.offsetHeight
         let height = 0
         let volumeNum = 0
+        console.log(this.muted)
+        this.veoIsMuted(this.muted)
         if (type === 'init') {
-            volumeNum = this.volume / this.#VOLUME_LEN
-            height = ((volumeHeight * this.volume) / this.#VOLUME_LEN) / volumeHeight * 100
+            volumeNum = !this.muted ? this.volume / this.#VOLUME_LEN : 0
+            height = !this.muted ?((volumeHeight * this.volume) / this.#VOLUME_LEN) / volumeHeight * 100 :0
         } else {
             const y = volumeHeight - eY
             volumeNum = ((this.#VOLUME_LEN * y) / volumeHeight) / 100
             height = (y / volumeHeight) * 100
         }
+        console.log(height,volumeNum)
         veo.volume = volumeNum
         veoVolumeProgressIng.style.height = height + '%';
         veoVolumeProgressBar.style.bottom = (height - 8) + '%';
@@ -978,7 +980,7 @@ export class VeoPlayer extends CreateVeoNode {
         let barBottom = 0
         const proHeight = veoVolumeProgress.offsetHeight
         const elemMove = (e) => {
-            const y = isPc() ? e.clientY : e.touches[0].clientY
+            const y = e.clientY
             let offset = (proHeight - (y - barY + barBottom))
             let by = (100 * offset) / proHeight
             if (by > -1 && by <= 100) {
@@ -991,13 +993,13 @@ export class VeoPlayer extends CreateVeoNode {
             }
         }
 
-        veoVolumeProgressBar.addEventListener(isPc() ? "mousedown" : "touchstart", (e) => {
-            barY = isPc() ? e.clientY : e.touches[0].clientY
+        veoVolumeProgressBar.addEventListener("mousedown", (e) => {
+            barY = e.clientY
             barBottom = e.target.offsetTop
-            window.addEventListener(isPc() ? "mousemove" : "touchmove", elemMove)
+            window.addEventListener("mousemove", elemMove)
         })
-        window.addEventListener(isPc() ? "mouseup" : "touchend", (e) => {
-            window.removeEventListener(isPc() ? "mousemove" : "touchmove", elemMove)
+        window.addEventListener("mouseup", (e) => {
+            window.removeEventListener("mousemove",elemMove)
         })
 
     }
