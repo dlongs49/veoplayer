@@ -20,6 +20,7 @@ export class VeoPlayer extends CreateVeoNode {
             style,
             muted,
             anonymous,
+            playTime,
             bokeh,
             plugins,
             islive,
@@ -46,6 +47,7 @@ export class VeoPlayer extends CreateVeoNode {
         this.speed = speed || defaultSpeed
         this.autoplay = autoplay || false
         this.volume = volume || 70
+        this.playTime = playTime
         this.initNode()
         this.initPlayer()
     }
@@ -213,7 +215,6 @@ export class VeoPlayer extends CreateVeoNode {
             veo
         } = this.initNode()
 
-
         veo.addEventListener('loadstart', (e) => {
             this.networkState = veo.networkState
             this.readyState = veo.readyState
@@ -266,6 +267,7 @@ export class VeoPlayer extends CreateVeoNode {
             } else {
                 this.veoPlayPauseNode("pause")
             }
+            this.veoSetCurrentTime()
             this.veoTimeUpdate()
             this.veoPoster()
             this.veoBgPicture()
@@ -550,29 +552,35 @@ export class VeoPlayer extends CreateVeoNode {
      * 更改进度条位置
      */
     veoProcessOffset() {
-        const {veo, veoIng, veoCon, veoSub, veoTimeIng, veoScreen, veoContainer} = this.initNode()
+        const {veo, veoIng, veoCon, veoSub, veoTimeIng, veoContainer} = this.initNode()
 
 
         let barX = 0
         let barLeft = 0
-
         let duration = veo.duration
+        // 计算进度条值
+        const compute = (x) => {
+            const veoConWidth = veoContainer.offsetWidth
+            const veoSubWidth = veoSub.offsetWidth
+            let currentTime = (duration * x) / veoConWidth
+            // 进度条 width 值
+            const ingWidth = x / veoConWidth
+            //滑块 left 值
+            const subWidth = (x - (veoSubWidth / 2)) / veoConWidth
+            veoIng.style.width = (ingWidth * 100) + '%'
+            veoSub.style.left = (subWidth * 100) + '%'
+            veoTimeIng.innerHTML = formatTime(currentTime).toString()
+            veo.currentTime = currentTime
+            this.veoPlayPauseNode("play")
+        }
+        // 拖动进度条
         const elemMove = (e) => {
             let veoConWidth = veoContainer.offsetWidth
-            let veoSubWidth = veoSub.offsetWidth
             const cx = e.clientX
             let x = cx - barX + barLeft
             let offset = x / veoConWidth
             if (offset > -1 && offset <= 1) {
-                let currentTime = (duration * x) / veoConWidth
-                const ingWidth = x / veoConWidth
-                const subWidth = (x - (veoSubWidth / 2)) / veoConWidth
-                veoIng.style.width = (ingWidth * 100) + '%'
-                veoSub.style.left = (subWidth * 100) + '%'
-                let time = formatTime(currentTime)
-                veoTimeIng.innerHTML = time
-                veo.currentTime = currentTime
-                this.veoPlayPauseNode("play")
+                compute(x)
             }
         }
 
@@ -583,26 +591,17 @@ export class VeoPlayer extends CreateVeoNode {
             barLeft = e.target.offsetLeft
             window.addEventListener("mousemove", elemMove)
         })
+
+        //点击进度条滑块
+        veoCon.addEventListener("click", (e) => {
+            if (flag) return
+            let x = e.offsetX
+            flag = false
+            compute(x)
+        })
         window.addEventListener('mouseup', (e) => {
             flag = false
             window.removeEventListener("mousemove", elemMove)
-        })
-
-        veoCon.addEventListener("click", (e) => {
-            if (flag) return
-            let veoConWidth = veoContainer.offsetWidth
-            let veoSubWidth = veoSub.offsetWidth
-            let duration = veo.duration
-            let x = e.offsetX
-            let currentTime = (duration * x) / veoConWidth
-            const ingWidth = x / veoConWidth
-            const subWidth = (x - (veoSubWidth / 2)) / veoConWidth
-            veoIng.style.width = (ingWidth * 100) + '%'
-            veoSub.style.left = (subWidth * 100) + '%'
-            let time = formatTime(currentTime)
-            veoTimeIng.innerHTML = time
-            veo.currentTime = currentTime
-            this.veoPlayPauseNode("play")
         })
     }
 
@@ -615,6 +614,13 @@ export class VeoPlayer extends CreateVeoNode {
 
         veo.addEventListener("timeupdate", (e) => {
             let currentTime = veo.currentTime
+            e.veoFormatTime = formatTime(currentTime)
+            // 外部调用
+            if (callback) {
+                callback(e)
+            }
+            this.computedPorcess(currentTime)
+            return
             if (veoCon != null) {
                 let veoConWidth = veoCon.offsetWidth
                 let duration = veo.duration
@@ -627,13 +633,43 @@ export class VeoPlayer extends CreateVeoNode {
             }
 
             let time = formatTime(currentTime)
-            e.veoFormatTime = time
-            // 外部调用
-            if (callback) {
-                callback(e)
-            }
+
             veoTimeIng.innerHTML = time
         })
+    }
+
+    /**
+     * 根据时长计算 进度条的 [宽  left] 值
+     */
+    computedPorcess(data) {
+        const {veo, veoCon, veoIng, veoSub, veoTimeIng} = this.initNode()
+        let veoSubWidth = veoSub.offsetWidth
+        if (veoCon != null) {
+            let veoConWidth = veoCon.offsetWidth
+            let duration = veo.duration
+            const ingWidth = ((veoConWidth * data) / duration) / veoConWidth
+            const subWidth = (((veoConWidth * data) / duration) - (veoSubWidth / 2)) / veoConWidth
+            if (veoIng) {
+                veoIng.style.width = (ingWidth * 100) + '%'
+                veoSub.style.left = (subWidth * 100) + '%'
+            }
+            veoTimeIng.innerHTML = formatTime(data).toString()
+        }
+    }
+
+    /**
+     * 设置记忆时长播放
+     */
+    veoSetCurrentTime() {
+        const {veo} = this.initNode()
+        if (this.playTime === null || this.playTime === undefined) return
+        if (!this.isNumber(this.playTime)) {
+            throw  new Error("[playTime]数据类型异常，期待数据类型为[number]")
+        }
+        if (this.playTime) {
+            this.computedPorcess(this.playTime)
+            veo.currentTime = this.playTime
+        }
     }
 
     /**

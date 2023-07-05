@@ -31,13 +31,13 @@ export class paramsRules {
         }
     }
     isString(params) {
-        return typeof params === 'string' && Object.prototype.toString.call(params) === '[object String]' ? true : false
+        return typeof params === 'string' && Object.prototype.toString.call(params) === '[object String]'
     }
     isNumber(params) {
         return Number.isInteger(params)
     }
     isObject(params) {
-       return Object.prototype.toString.call(params) === '[object Object]' ? true : false
+        return Object.prototype.toString.call(params) === '[object Object]'
     }
     urlRules() {
         let is = Object.prototype.toString.call(this.url)
