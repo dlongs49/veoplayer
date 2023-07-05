@@ -1,10 +1,13 @@
+import { terser } from 'rollup-plugin-terser'; // 打包混淆压缩代码
 import postcss from "rollup-plugin-postcss"; // 处理css
 import babel from 'rollup-plugin-babel'; // es5
 import serve from 'rollup-plugin-serve'; // 服务
 import livereload from 'rollup-plugin-livereload';
+import { nodeResolve } from '@rollup/plugin-node-resolve'; // 定位 node-modules 模块
 import cssnext from 'postcss-cssnext'; // 兼容 css
-import json from './package.json' assert {type: 'json'}
-
+import nodePolyfills from 'rollup-plugin-node-polyfills'
+import strip from "@rollup/plugin-strip";
+import json from './package.json' assert {'json'}
 export default {
     input: ["./packages/main.js"],
     external: ["hls.js"],
@@ -32,10 +35,12 @@ export default {
             extensions: ['.css'],
             // extract: 'css/index.css'
         }),
-        // strip(),
-        // nodeResolve(),
-        // terser(),
-        // nodePolyfills(),
+        strip({
+            functions: [ 'console.log', 'assert.*', 'debug', 'alert' ],
+        }),
+        nodeResolve(),
+        terser(),
+        nodePolyfills(),
         livereload(),
         serve({
             port: 3000,

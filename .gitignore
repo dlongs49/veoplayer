@@ -1,8 +1,10 @@
 /node_modules
+/packages/style/*css.map
 *.fleet
 *.vscode
 *.idea
 *.zip
 *.rar
 *.log
+*.map
 pnpm-lock.yaml
