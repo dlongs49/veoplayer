@@ -584,12 +584,9 @@ export class VeoPlayer extends CreateVeoNode {
             window.addEventListener("mousemove", elemMove)
         })
         window.addEventListener('mouseup', (e) => {
+            flag = false
             window.removeEventListener("mousemove", elemMove)
         })
-        veoSub.addEventListener("mouseup", (e) => {
-            flag = true
-        })
-
 
         veoCon.addEventListener("click", (e) => {
             if (flag) return
