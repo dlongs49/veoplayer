@@ -3,12 +3,7 @@ import babel from 'rollup-plugin-babel'; // es5
 import serve from 'rollup-plugin-serve'; // 服务
 import livereload from 'rollup-plugin-livereload';
 import cssnext from 'postcss-cssnext'; // 兼容 css
-import json from './package.json'
-
-assert
-{
-    "json"
-}
+import json from './package.json' assert {type: 'json'}
 
 export default {
     input: ["./packages/main.js"],

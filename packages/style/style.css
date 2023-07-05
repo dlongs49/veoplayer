@@ -104,13 +104,12 @@
   width: 100%;
   height: 80%;
   cursor: pointer;
-  transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
 }
 .veo-container .veo-control .veo-process-con .veo-process-vir:hover {
   height: 100% !important;
+  transform: none;
 }
 .veo-container .veo-control .veo-process-con .veo-process-vir:hover .veo-process-sub {
-  opacity: 1;
   transform: none;
 }
 .veo-container .veo-control .veo-process-con .veo-process-out {
@@ -138,7 +137,6 @@
   pointer-events: none;
 }
 .veo-container .veo-control .veo-process-con .veo-process-sub {
-  opacity: 0;
   position: absolute;
   top: -4px;
   transform: scale(0);
@@ -148,7 +146,8 @@
   border-radius: 50%;
   border: 2px solid var(--veo-process-color);
   z-index: 1;
-  transition: transform 0.15s cubic-bezier(0.4, 0, 1, 1);
+  transform-origin: 50% 46%;
+  transition: transform 0.1s cubic-bezier(0.4, 0, 1, 1);
 }
 .veo-container .veo-control .veo-process-con .veo-process-time-slide {
   display: none;

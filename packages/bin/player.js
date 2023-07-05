@@ -11,6 +11,7 @@ export class VeoPlayer extends CreateVeoNode {
     errorText = ""
     durationFormatTime = null
     isFullScreen = 1
+
     constructor(arg) {
         let {
             id,
@@ -549,22 +550,25 @@ export class VeoPlayer extends CreateVeoNode {
      * 更改进度条位置
      */
     veoProcessOffset() {
-        const {veo, veoIng, veoCon, veoSub, veoTimeIng, veoContainer} = this.initNode()
+        const {veo, veoIng, veoCon, veoSub, veoTimeIng, veoScreen, veoContainer} = this.initNode()
 
 
         let barX = 0
         let barLeft = 0
-        let veoConWidth = veoContainer.offsetWidth
+
         let duration = veo.duration
         const elemMove = (e) => {
+            let veoConWidth = veoContainer.offsetWidth
+            let veoSubWidth = veoSub.offsetWidth
             const cx = e.clientX
-            let x = (cx - barX + barLeft)
+            let x = cx - barX + barLeft
             let offset = x / veoConWidth
             if (offset > -1 && offset <= 1) {
                 let currentTime = (duration * x) / veoConWidth
                 const ingWidth = x / veoConWidth
+                const subWidth = (x - (veoSubWidth / 2)) / veoConWidth
                 veoIng.style.width = (ingWidth * 100) + '%'
-                veoSub.style.left = ((ingWidth * 100) - 0.6) + '%'
+                veoSub.style.left = (subWidth * 100) + '%'
                 let time = formatTime(currentTime)
                 veoTimeIng.innerHTML = time
                 veo.currentTime = currentTime
@@ -590,12 +594,14 @@ export class VeoPlayer extends CreateVeoNode {
         veoCon.addEventListener("click", (e) => {
             if (flag) return
             let veoConWidth = veoContainer.offsetWidth
+            let veoSubWidth = veoSub.offsetWidth
             let duration = veo.duration
             let x = e.offsetX
             let currentTime = (duration * x) / veoConWidth
             const ingWidth = x / veoConWidth
+            const subWidth = (x - (veoSubWidth / 2)) / veoConWidth
             veoIng.style.width = (ingWidth * 100) + '%'
-            veoSub.style.left = ((ingWidth * 100) - 0.6) + '%'
+            veoSub.style.left = (subWidth * 100) + '%'
             let time = formatTime(currentTime)
             veoTimeIng.innerHTML = time
             veo.currentTime = currentTime
@@ -608,6 +614,7 @@ export class VeoPlayer extends CreateVeoNode {
      */
     veoTimeUpdate(callback) {
         const {veo, veoCon, veoIng, veoSub, veoTimeIng} = this.initNode()
+        let veoSubWidth = veoSub.offsetWidth
 
         veo.addEventListener("timeupdate", (e) => {
             let currentTime = veo.currentTime
@@ -615,10 +622,10 @@ export class VeoPlayer extends CreateVeoNode {
                 let veoConWidth = veoCon.offsetWidth
                 let duration = veo.duration
                 const ingWidth = ((veoConWidth * currentTime) / duration) / veoConWidth
-
+                const subWidth = (((veoConWidth * currentTime) / duration) - (veoSubWidth / 2)) / veoConWidth
                 if (veoIng) {
                     veoIng.style.width = (ingWidth * 100) + '%'
-                    veoSub.style.left = ((ingWidth * 100) - 0.5) + '%'
+                    veoSub.style.left = (subWidth * 100) + '%'
                 }
             }
 
