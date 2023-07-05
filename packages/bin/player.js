@@ -200,6 +200,7 @@ export class VeoPlayer extends CreateVeoNode {
                 this.mouseHover(veoVolume.querySelectorAll("svg")[1])
             }
             this.veoVolume()
+            this.voeInitVolume('init')
             this.mouseInout(veoVolume, veoVolumeOutcon, "opacity")
         }
         this.veoRefresh()
@@ -221,9 +222,6 @@ export class VeoPlayer extends CreateVeoNode {
                 e.networkState = veo.networkState
                 e.readyState = veo.readyState
                 callback(e)
-            }
-            if (isPc()) {
-                this.voeInitVolume('init')
             }
         })
     }
@@ -894,8 +892,10 @@ export class VeoPlayer extends CreateVeoNode {
                 const {val} = e.target.dataset
                 if (val === "volume") {
                     this.veoIsMuted(true)
+                    this.computedVolume("volume_params",null,0)
                 } else {
                     this.veoIsMuted(false)
+                    this.computedVolume("volume_params",null,this.volume)
                 }
             })
         }
@@ -921,7 +921,14 @@ export class VeoPlayer extends CreateVeoNode {
      * 初始化音量
      */
     voeInitVolume(type = 'init', eY) {
-
+        if (type === 'init') {
+            this.computedVolume("volume_params",null,this.volume)
+            return
+        }
+        this.computedVolume(null,eY,this.volume)
+    }
+    // 计算音量返回值及交互高度
+    computedVolume(type,offsetY = 0,volume = 0){
         const {
             veo,
             veoVolumeProgressPertxt,
@@ -929,27 +936,25 @@ export class VeoPlayer extends CreateVeoNode {
             veoVolumeProgressIng,
             veoVolumeProgressBar
         } = this.initNode()
-
         const volumeHeight = veoVolumeProgress.offsetHeight
         let height = 0
         let volumeNum = 0
-        console.log(this.muted)
-        this.veoIsMuted(this.muted)
-        if (type === 'init') {
-            volumeNum = !this.muted ? this.volume / this.#VOLUME_LEN : 0
-            height = !this.muted ?((volumeHeight * this.volume) / this.#VOLUME_LEN) / volumeHeight * 100 :0
-        } else {
-            const y = volumeHeight - eY
+        // 根据音量计算
+        if(type === "volume_params"){
+            volumeNum = volume / this.#VOLUME_LEN
+            height = !this.muted ?((volumeHeight * volume) / this.#VOLUME_LEN) / volumeHeight * 100 :0
+        }else {
+            // 根据拖拽音量条计算
+            const y = volumeHeight - offsetY
             volumeNum = ((this.#VOLUME_LEN * y) / volumeHeight) / 100
             height = (y / volumeHeight) * 100
+            this.volume = Math.floor(volumeNum * 100)
         }
-        console.log(height,volumeNum)
-        veo.volume = volumeNum
+        veo.volume = this.muted ? 0 : volumeNum
         veoVolumeProgressIng.style.height = height + '%';
         veoVolumeProgressBar.style.bottom = (height - 8) + '%';
         veoVolumeProgressPertxt.innerHTML = (Math.floor(height)) + '%';
     }
-
     /**
      * 音量改变时
      */
@@ -975,7 +980,7 @@ export class VeoPlayer extends CreateVeoNode {
             let y = e.offsetY
             this.voeInitVolume(null, y)
         })
-
+        this.veoIsMuted(this.muted)
         let barY = 0
         let barBottom = 0
         const proHeight = veoVolumeProgress.offsetHeight
