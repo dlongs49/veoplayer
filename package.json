@@ -17,7 +17,7 @@
   "type": "module",
   "scripts": {
     "dev": "node ./scripts/rollup.watch.cjs",
-    "out:css": "node ./packages/watch.js",
+    "out:build": "node ./packages/watch.js",
     "watch:css": "sass --watch ./packages/style:./packages/style",
     "build:css": "sass --style compressed ./packages/style:./packages/style",
     "serve": "rollup -w -c"

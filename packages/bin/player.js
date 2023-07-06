@@ -1,8 +1,3 @@
-/*!
- * veoplay v1.0.1-beta
- * (c) 2023-present dinglong
- * @Released under the MIT License.
- */
 // m3u8缓冲区进度   拖拽点击失效
 
 import {CreateVeoNode} from "./createVeoNode.js";
