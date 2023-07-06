@@ -36,6 +36,7 @@
     "access": "public",
     "tag": "latest"
   },
+  "homepage": "https://veoplaydoc.netlify.app",
   "author": "dinglong",
   "license": "MIT",
   "devDependencies": {

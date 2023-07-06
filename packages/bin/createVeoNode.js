@@ -28,7 +28,7 @@ export class CreateVeoNode extends paramsRules {
     #PROCESS_SIZE = 6
 
     constructor(arg) {
-        let {id, style, url, width, anonymous, plugins, islive, height, speed, autoplay, setting} = arg
+        let {id, style, url,log, width, anonymous, plugins, islive, height, speed, autoplay, setting} = arg
         super(arg)
         this.id = id
         this.style = style
@@ -42,7 +42,9 @@ export class CreateVeoNode extends paramsRules {
         this.autoplay = autoplay
         this.setting = setting || ["loop"]
         this.#createParentNode()
-
+        if(log){
+            console.info("%c veoplayer v1.0.1-beta https://veoplaydoc.netlify.app","color:#fff;background:#88c039;border-radius:4px;padding:3px 4px;margin:6px 0;")
+        }
     }
 
     /**

@@ -7,7 +7,6 @@
 
 import {CreateVeoNode} from "./createVeoNode.js";
 import {formatTime, formatVideo, isDom, isPc} from "../utils/format.js";
-console.info("%c veoplayer v1.0.1-beta https://veoplaydoc.netlify.app","color:#fff;background:#88c039;border-radius:4px;padding:3px 4px;margin:6px 0;")
 export class VeoPlayer extends CreateVeoNode {
     #SLIDE_OFFSET = 0.8 // 提示滑块偏移量
     #VOLUME_LEN = 100 // 音量总长
@@ -30,6 +29,7 @@ export class VeoPlayer extends CreateVeoNode {
             playTime,
             bokeh,
             plugins,
+            log,
             islive,
             url,
             width,
