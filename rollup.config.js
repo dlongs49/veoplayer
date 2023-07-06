@@ -7,7 +7,8 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'; // 定位 node-module
 import cssnext from 'postcss-cssnext'; // 兼容 css
 import nodePolyfills from 'rollup-plugin-node-polyfills'
 import strip from "@rollup/plugin-strip";
-import json from "./package.json" assert {"json" }
+import j from "./package.json"   assert {"json" }
+import json from '@rollup/plugin-json';
 
 export default {
     input: ["./packages/main.js"],
@@ -16,12 +17,12 @@ export default {
         Hls: "Hls"
     },
     output: [{
-        file: `dist/${json.name}.esm.min.js`,
+        file: `dist/${j.name}.esm.min.js`,
         format: "esm",
-        name: json.name
+        name: j.name
     },
     {
-        file: `dist/${json.name}.global.min.js`,
+        file: `dist/${j.name}.global.min.js`,
         format: "iife",
         name: "VeoPlayer"
     }],
@@ -37,8 +38,10 @@ export default {
             // extract: 'css/index.css'
         }),
         strip({
+            debugger: true,
             functions: [ 'console.log', 'assert.*', 'debug', 'alert' ],
         }),
+        json(),
         nodeResolve(),
         terser(),
         nodePolyfills(),

@@ -3,7 +3,7 @@
  * (c) 2023-present dinglong
  * @Released under the MIT License.
  */
-
+// m3u8缓冲区进度   拖拽点击失效
 
 import {CreateVeoNode} from "./createVeoNode.js";
 import {formatTime, formatVideo, isDom, isPc} from "../utils/format.js";

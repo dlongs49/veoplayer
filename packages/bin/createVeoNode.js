@@ -10,7 +10,7 @@ import {exit_full_screen, full_screen} from '../svg_js/screen.js'
 import {formatVideo, isDom, isPc} from '../utils/format.js'
 import {paramsRules} from './paramsRules.js'
 import "../style/style.css"
-
+import json from "../../package.json"
 export class CreateVeoNode extends paramsRules {
     #PLAY_LABEL = "播放"
     #PAUSE_LABEL = "暂停"
@@ -43,7 +43,7 @@ export class CreateVeoNode extends paramsRules {
         this.setting = setting || ["loop"]
         this.#createParentNode()
         if(log){
-            console.info("%c veoplayer v1.0.1-beta https://veoplaydoc.netlify.app","color:#fff;background:#88c039;border-radius:4px;padding:3px 4px;margin:6px 0;")
+            console.info(`%c veoplayer v${json.version} ${json.homepage}`,"color:#fff;background:#88c039;border-radius:4px;padding:3px 4px;margin:10px 0;")
         }
     }
 
