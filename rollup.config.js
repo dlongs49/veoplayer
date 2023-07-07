@@ -37,10 +37,10 @@ export default {
             extensions: ['.css'],
             // extract: 'css/index.css'
         }),
-        strip({
-            debugger: true,
-            functions: [ 'console.log', 'assert.*', 'debug', 'alert' ],
-        }),
+        // strip({
+        //     debugger: true,
+        //     functions: [ 'console.log', 'assert.*', 'debug', 'alert' ],
+        // }),
         nodeResolve(),
         terser(),
         nodePolyfills(),

@@ -1,10 +1,10 @@
-// m3u8缓冲区进度   拖拽点击失效
-
 import {CreateVeoNode} from "./createVeoNode.js";
 import {formatTime, formatVideo, isDom, isPc} from "../utils/format.js";
+
 export class VeoPlayer extends CreateVeoNode {
     #SLIDE_OFFSET = 0.8 // 提示滑块偏移量
     #VOLUME_LEN = 100 // 音量总长
+    #CONTROL_HIME_TIME = 2800 // 在全屏状态下 控制栏消失倒计时
     #timer = null;
     durationTime = 1
     isNode = true;
@@ -12,6 +12,7 @@ export class VeoPlayer extends CreateVeoNode {
     errorText = ""
     durationFormatTime = null
     isFullScreen = 1
+    play_type = "pause"
 
     constructor(arg) {
         let {
@@ -306,10 +307,8 @@ export class VeoPlayer extends CreateVeoNode {
      */
     containerMouse() {
         let {veoControl, veoScreen, veoContainer, veoVideo} = this.initNode()
+        let timer = null
         veoContainer.addEventListener("mouseenter", (e) => {
-            veoContainer.classList.add("veo-control-isshow")
-        })
-        veoControl.addEventListener("mouseenter", (e) => {
             veoContainer.classList.add("veo-control-isshow")
         })
         veoContainer.addEventListener("mouseleave", (e) => {
@@ -318,17 +317,40 @@ export class VeoPlayer extends CreateVeoNode {
             }
             veoContainer.classList.remove("veo-control-isshow")
         })
-        // let index = veoScreen.dataset.index
-        // veoVideo.addEventListener("mousemove", (e) => {
-        //     veoContainer.classList.add("veo-control-isshow")
-        //     if (index === '1' && this.isMouse) {
-        //         setTimeout(() => {
-        //             veoContainer.classList.remove("veo-control-isshow")
-        //         }, 2000);
-        //     }
+        veoControl.addEventListener("mousemove", (e) => {
+            clearTimeout(timer)
+            veoContainer.classList.add("veo-control-isshow")
+            this.isMouse = false
+            let index = veoScreen.dataset.index
+            if (index === "1" || this.isMouse === false) {
+                return
+            }
+            isMouseFunc("控制区")
+        })
+        veoVideo.addEventListener("mousemove", (e) => {
+            veoContainer.classList.add("veo-control-isshow")
+            let index = veoScreen.dataset.index
+            if (index === "1") {
+                return
+            }
+            this.isMouse = true
+            isMouseFunc("视频区")
 
-        // })
-
+        })
+        /**
+         * 在全屏状态下鼠标移动在视频区 2 秒后控制区消失
+         * 鼠标移动在控制区则保持不消失
+         */
+        const isMouseFunc = (t) => {
+            let index = veoScreen.dataset.index
+            clearTimeout(timer)
+            if (index === '0' && this.isMouse === true && this.play_type === "play") {
+                timer = setTimeout(()=> {
+                    this.isMouse = false
+                    veoContainer.classList.remove("veo-control-isshow")
+                }, this.#CONTROL_HIME_TIME);
+            }
+        }
     }
 
     /**
@@ -383,7 +405,7 @@ export class VeoPlayer extends CreateVeoNode {
             this.networkState = veo.networkState
             this.readyState = veo.readyState
             if (callback) {
-                if(res.status != 200){
+                if (res.status != 200) {
                     callback(res)
                 }
             }
@@ -489,6 +511,7 @@ export class VeoPlayer extends CreateVeoNode {
             if (callback) {
                 callback(e)
             }
+            this.play_type = "play"
             veoLoading.style.display = 'none'
         })
     }
@@ -502,8 +525,8 @@ export class VeoPlayer extends CreateVeoNode {
         veo.addEventListener("progress", (e) => {
             let w = veoContainer.offsetWidth
             let len = e.target.buffered.length
-            for(let i = 0; i < len; i++){
-                if(e.target.buffered.start(len - 1 - i) < veo.currentTime){
+            for (let i = 0; i < len; i++) {
+                if (e.target.buffered.start(len - 1 - i) < veo.currentTime) {
                     let hc = e.target.buffered.end(len - 1 - i)
                     let buffWidth = (hc * w) / veo.duration
                     veoBuff.style.width = ((buffWidth / w) * 100) + "%"
@@ -669,6 +692,7 @@ export class VeoPlayer extends CreateVeoNode {
     veoPlayPauseNode(type) {
         const {veo, veoPlayPause, veoVideo} = this.initNode()
         const nodeList = veoPlayPause.getElementsByTagName("svg")
+        this.play_type = type
         if (type === 'play') {
             veo.play()
             veoPlayPause.setAttribute("data-type", "pause")
@@ -886,10 +910,10 @@ export class VeoPlayer extends CreateVeoNode {
                 const {val} = e.target.dataset
                 if (val === "volume") {
                     this.veoIsMuted(true)
-                    this.computedVolume("volume_params",null,0)
+                    this.computedVolume("volume_params", null, 0)
                 } else {
                     this.veoIsMuted(false)
-                    this.computedVolume("volume_params",null,this.volume)
+                    this.computedVolume("volume_params", null, this.volume)
                 }
             })
         }
@@ -916,13 +940,14 @@ export class VeoPlayer extends CreateVeoNode {
      */
     voeInitVolume(type = 'init', eY) {
         if (type === 'init') {
-            this.computedVolume("volume_params",null,this.volume)
+            this.computedVolume("volume_params", null, this.volume)
             return
         }
-        this.computedVolume(null,eY,this.volume)
+        this.computedVolume(null, eY, this.volume)
     }
+
     // 计算音量返回值及交互高度
-    computedVolume(type,offsetY = 0,volume = 0){
+    computedVolume(type, offsetY = 0, volume = 0) {
         const {
             veo,
             veoVolumeProgressPertxt,
@@ -934,10 +959,10 @@ export class VeoPlayer extends CreateVeoNode {
         let height = 0
         let volumeNum = 0
         // 根据音量计算
-        if(type === "volume_params"){
+        if (type === "volume_params") {
             volumeNum = volume / this.#VOLUME_LEN
-            height = !this.muted ?((volumeHeight * volume) / this.#VOLUME_LEN) / volumeHeight * 100 :0
-        }else {
+            height = !this.muted ? ((volumeHeight * volume) / this.#VOLUME_LEN) / volumeHeight * 100 : 0
+        } else {
             // 根据拖拽音量条计算
             const y = volumeHeight - offsetY
             volumeNum = ((this.#VOLUME_LEN * y) / volumeHeight) / 100
@@ -949,6 +974,7 @@ export class VeoPlayer extends CreateVeoNode {
         veoVolumeProgressBar.style.bottom = (height - 8) + '%';
         veoVolumeProgressPertxt.innerHTML = (Math.floor(height)) + '%';
     }
+
     /**
      * 音量改变时
      */
@@ -998,7 +1024,7 @@ export class VeoPlayer extends CreateVeoNode {
             window.addEventListener("mousemove", elemMove)
         })
         window.addEventListener("mouseup", (e) => {
-            window.removeEventListener("mousemove",elemMove)
+            window.removeEventListener("mousemove", elemMove)
         })
 
     }
