@@ -628,21 +628,6 @@ export class VeoPlayer extends CreateVeoNode {
                 callback(e)
             }
             this.computedPorcess(currentTime)
-            return
-            if (veoCon != null) {
-                let veoConWidth = veoCon.offsetWidth
-                let duration = veo.duration
-                const ingWidth = ((veoConWidth * currentTime) / duration) / veoConWidth
-                const subWidth = (((veoConWidth * currentTime) / duration) - (veoSubWidth / 2)) / veoConWidth
-                if (veoIng) {
-                    veoIng.style.width = (ingWidth * 100) + '%'
-                    veoSub.style.left = (subWidth * 100) + '%'
-                }
-            }
-
-            let time = formatTime(currentTime)
-
-            veoTimeIng.innerHTML = time
         })
     }
 
