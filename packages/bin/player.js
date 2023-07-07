@@ -383,7 +383,9 @@ export class VeoPlayer extends CreateVeoNode {
             this.networkState = veo.networkState
             this.readyState = veo.readyState
             if (callback) {
-                callback(res)
+                if(res.status != 200){
+                    callback(res)
+                }
             }
             return
         }
@@ -499,6 +501,8 @@ export class VeoPlayer extends CreateVeoNode {
         let {veoContainer, veo, veoBuff} = this.initNode()
         veo.addEventListener("progress", (e) => {
             let hc = e.target.buffered.end(0)
+            console.log(e.target.buffered)
+            console.log(e.target.buffered.start(0)+"-----"+hc)
             if (callback) {
                 callback(e)
             }

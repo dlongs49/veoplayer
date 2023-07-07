@@ -16,11 +16,11 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "node ./scripts/rollup.watch.cjs",
-    "out:build": "node ./packages/watch.js",
+    "watch:dev": "node ./scripts/rollup.watch.cjs",
     "watch:css": "sass --watch ./packages/style:./packages/style",
     "build:css": "sass --style compressed ./packages/style:./packages/style",
-    "serve": "rollup -w -c"
+    "write:build": "node ./packages/watch.js",
+    "out:build": "rollup -w -c"
   },
   "keywords": [
     "vidoe",

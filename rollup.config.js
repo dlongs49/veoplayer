@@ -37,14 +37,14 @@ export default {
             extensions: ['.css'],
             // extract: 'css/index.css'
         }),
-        strip({
-            debugger: true,
-            functions: [ 'console.log', 'assert.*', 'debug', 'alert' ],
-        }),
-        json(),
+        // strip({
+        //     debugger: true,
+        //     functions: [ 'console.log', 'assert.*', 'debug', 'alert' ],
+        // }),
         nodeResolve(),
         terser(),
         nodePolyfills(),
+        json(),
         livereload(),
         serve({
             port: 3000,
