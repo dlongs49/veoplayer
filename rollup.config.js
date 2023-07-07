@@ -7,7 +7,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'; // 定位 node-module
 import cssnext from 'postcss-cssnext'; // 兼容 css
 import nodePolyfills from 'rollup-plugin-node-polyfills'
 import strip from "@rollup/plugin-strip";
-import j from "./package.json"   assert {"json" }
+import j from "./package.json"   assert {type:"json" }
 import json from '@rollup/plugin-json';
 
 export default {

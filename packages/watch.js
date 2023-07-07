@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
 const esmPath = "./dist/veoplayer.esm.min.js"
 const globalPath = "./dist/veoplayer.global.min.js"
-import json from "../package.json"   assert {"json" }
+import json from "../package.json"   assert {type:"json" }
 let pathList = [esmPath,globalPath]
 let released  =
 `
