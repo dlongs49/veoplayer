@@ -3,11 +3,14 @@ const esmPath = "./dist/veoplayer.esm.min.js"
 const globalPath = "./dist/veoplayer.global.min.js"
 import json from "../package.json"   assert {type:"json" }
 let pathList = [esmPath,globalPath]
+const buildDate = new Date().toLocaleString()
 let released  =
 `
 /**
  * ${json.name} v${json.version}
  * (c) 2023-${new Date().getFullYear()} ${json.author}
+ * Date: ${buildDate}
+ * DocPage: ${json.homepage}
  * @Released under the MIT License.
  */
 `
