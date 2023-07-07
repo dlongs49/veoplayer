@@ -500,15 +500,20 @@ export class VeoPlayer extends CreateVeoNode {
     veoProgressBuffer(callback) {
         let {veoContainer, veo, veoBuff} = this.initNode()
         veo.addEventListener("progress", (e) => {
-            let hc = e.target.buffered.end(0)
-            console.log(e.target.buffered)
-            console.log(e.target.buffered.start(0)+"-----"+hc)
+            let w = veoContainer.offsetWidth
+            let len = e.target.buffered.length
+            for(let i = 0; i < len; i++){
+                if(e.target.buffered.start(len - 1 - i) < veo.currentTime){
+                    let hc = e.target.buffered.end(len - 1 - i)
+                    let buffWidth = (hc * w) / veo.duration
+                    veoBuff.style.width = ((buffWidth / w) * 100) + "%"
+                    break
+                }
+            }
             if (callback) {
                 callback(e)
             }
-            let w = veoContainer.offsetWidth
-            let buffWidth = (hc * w) / veo.duration
-            veoBuff.style.width = ((buffWidth / w) * 100) + "%"
+
         })
     }
 
