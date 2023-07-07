@@ -617,9 +617,7 @@ export class VeoPlayer extends CreateVeoNode {
      * 播放时长更改
      */
     veoTimeUpdate(callback) {
-        const {veo, veoCon, veoIng, veoSub, veoTimeIng} = this.initNode()
-        let veoSubWidth = veoSub.offsetWidth
-
+        const {veo} = this.initNode()
         veo.addEventListener("timeupdate", (e) => {
             let currentTime = veo.currentTime
             e.veoFormatTime = formatTime(currentTime)
