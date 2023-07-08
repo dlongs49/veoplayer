@@ -34,13 +34,13 @@ export default {
             plugins: [
                 cssnext({warnForDuplicates: false,}),
             ],
-            extensions: ['.css'],
+            extensions: ['.css','.scss'],
             // extract: 'css/index.css'
         }),
-        // strip({
-        //     debugger: true,
-        //     functions: [ 'console.log', 'assert.*', 'debug', 'alert' ],
-        // }),
+        strip({
+            debugger: true,
+            functions: [ 'console.log', 'assert.*', 'debug', 'alert' ],
+        }),
         nodeResolve(),
         terser(),
         nodePolyfills(),
