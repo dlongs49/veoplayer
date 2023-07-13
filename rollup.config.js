@@ -10,6 +10,17 @@ import strip from "@rollup/plugin-strip";
 import j from "./package.json"   assert {type:"json" }
 import json from '@rollup/plugin-json';
 
+const buildDate = new Date().toLocaleString()
+let banner = `
+/**
+ * ${j.name} v${j.version}
+ * (c) 2023-${new Date().getFullYear()} ${j.author}
+ * Date: ${buildDate}
+ * DocPage: ${j.homepage}
+ * @Released under the MIT License.
+ */
+`
+
 export default {
     input: ["./packages/main.js"],
     external: ["hls.js"],
@@ -19,12 +30,14 @@ export default {
     output: [{
         file: `dist/${j.name}.esm.min.js`,
         format: "esm",
-        name: j.name
+        name: j.name,
+        banner:banner,
     },
     {
         file: `dist/${j.name}.global.min.js`,
         format: "iife",
-        name: "VeoPlayer"
+        name: "VeoPlayer",
+        banner
     }],
     plugins: [
         babel({
@@ -42,7 +55,11 @@ export default {
             functions: [ 'console.log', 'assert.*', 'debug', 'alert' ],
         }),
         nodeResolve(),
-        terser(),
+        terser({
+            output: {
+                comments: /veoplayer v/,
+            },
+        }),
         nodePolyfills(),
         json(),
         livereload(),
